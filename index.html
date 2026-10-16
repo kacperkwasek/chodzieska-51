@@ -1,0 +1,610 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'">
+  <meta name="referrer" content="strict-origin-when-cross-origin">
+  <meta name="robots" content="noindex">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chodzieska 51 — cztery trzypoziomowe lokale w Wawrze | Sanit Investments</title>
+  <meta name="description" content="Chodzieska 51 w Warszawie-Wawrze: dwa budynki, cztery trzypoziomowe lokale po 100 m². W standardzie klimatyzacja, rekuperacja, pompa ciepła i ogrzewanie podłogowe. Ceny jawne na stronie. Deweloper: Sanit Investments.">
+  <!-- Domena poglądowa (POGLĄDOWE), do podmiany -->
+  <link rel="canonical" href="https://kacperkwasek.github.io/chodzieska-51/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sanit Investments">
+  <meta property="og:locale" content="pl_PL">
+  <meta property="og:title" content="Chodzieska 51 — cztery trzypoziomowe lokale w Wawrze">
+  <meta property="og:description" content="Dwa budynki, cztery lokale po 100 m² na trzech poziomach. Warszawa, Wawer. Deweloper: Sanit Investments.">
+  <meta property="og:url" content="https://kacperkwasek.github.io/chodzieska-51/">
+  <meta property="og:image" content="https://kacperkwasek.github.io/chodzieska-51/assets/img/og-chodzieska-51.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Budynki Chodzieska 51 widziane od strony parkingu">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#F5F2EB">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-300-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/ibm-plex-sans-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="assets/css/style.css">
+
+  <script src="assets/js/data.js" defer></script>
+  <script src="assets/vendor/leaflet/leaflet.js" defer></script>
+  <script src="assets/js/main.js" defer></script>
+</head>
+<body>
+  <a class="przeskocz" href="#tresc">Przejdź do treści</a>
+
+  <!-- Nawigacja -->
+  <header class="nav" id="nav">
+    <div class="nav__wnetrze">
+      <!-- Logo tymczasowe: napis krojem IBM Plex Sans 500 -->
+      <a class="nav__logo" href="#gora" aria-label="Chodzieska 51, początek strony">Chodzieska 51</a>
+      <nav aria-label="Główna">
+        <ul class="nav__linki">
+          <li><a href="#inwestycja">Inwestycja</a></li>
+          <li><a href="#galeria">Galeria</a></li>
+          <li><a href="#standard">Standard</a></li>
+          <li><a href="#lokale">Lokale i ceny</a></li>
+          <li><a href="#lokalizacja">Lokalizacja</a></li>
+          <li><a href="#kontakt">Kontakt</a></li>
+        </ul>
+      </nav>
+      <div class="nav__akcje">
+        <a class="btn btn--jasny nav__telefon" href="tel:+48690888849" data-telefon="pelny">Zadzwoń: +48 690 888 849</a>
+        <a class="btn" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+        <button class="nav__menu-przycisk" type="button" aria-expanded="false" aria-controls="menu-panel">
+          <svg class="ikona ikona--menu" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#menu"></use></svg><svg class="ikona ikona--zamknij" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zamknij"></use></svg>Menu
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="nav__panel" id="menu-panel" hidden>
+    <nav aria-label="Menu">
+      <ul>
+        <li><a href="#inwestycja">Inwestycja</a></li>
+        <li><a href="#galeria">Galeria</a></li>
+        <li><a href="#standard">Standard</a></li>
+        <li><a href="#lokale">Lokale i ceny</a></li>
+        <li><a href="#lokalizacja">Lokalizacja</a></li>
+        <li><a href="#kontakt">Kontakt</a></li>
+      </ul>
+    </nav>
+    <div class="nav__panel-kontakt">
+      <a class="btn btn--drugi nav__telefon" href="tel:+48690888849" data-telefon="pelny">Zadzwoń: +48 690 888 849</a>
+      <a class="btn" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+    </div>
+  </div>
+
+  <main id="tresc">
+
+    <!-- 1. Hero -->
+    <section class="hero" id="gora" aria-labelledby="hero-tytul">
+      <div class="hero__tekst">
+        <h1 id="hero-tytul">Chodzieska 51</h1>
+        <p class="hero__lead">Cztery trzypoziomowe lokale po 100&nbsp;m² w zielonej części Wawra.</p>
+        <ul class="hero__fakty">
+          <li><span class="etykieta">Lokale</span><span class="wartosc">4</span></li>
+          <li><span class="etykieta">Powierzchnia</span><span class="wartosc">100&nbsp;m² na 3 poziomach</span></li>
+          <li><span class="etykieta">Termin oddania</span><span class="wartosc" data-termin>IV kwartał 2027</span></li>
+          <li><span class="etykieta">Cena od</span><span class="wartosc" data-cena-od>1&nbsp;350&nbsp;000 zł</span></li>
+        </ul>
+        <div class="hero__akcje">
+          <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
+          <a class="btn btn--drugi" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+        </div>
+      </div>
+      <figure class="hero__zdjecie">
+        <picture>
+          <source type="image/webp" sizes="(min-width: 900px) 200vh, 100vw"
+            srcset="assets/img/wizualizacja-3-640.webp 640w, assets/img/wizualizacja-3-1280.webp 1280w, assets/img/wizualizacja-3-1412.webp 1412w">
+          <img src="assets/img/wizualizacja-3-1412.jpg"
+            srcset="assets/img/wizualizacja-3-640.jpg 640w, assets/img/wizualizacja-3-1280.jpg 1280w, assets/img/wizualizacja-3-1412.jpg 1412w"
+            sizes="(min-width: 900px) 200vh, 100vw" width="1412" height="656" fetchpriority="high" decoding="async"
+            alt="Dwa budynki Chodzieska 51 od strony parkingu: jasny tynk, brązowa okładzina, balkony z lamelami i zieleń wokół">
+        </picture>
+      </figure>
+    </section>
+
+    <!-- 2. Inwestycja: tekst z renderem 7, pod spodem galeria -->
+    <section class="sekcja inwestycja" id="inwestycja" aria-labelledby="inwestycja-tytul">
+      <div class="wrap">
+        <h2 id="inwestycja-tytul" class="wizualnie-ukryte">Inwestycja</h2>
+        <div class="inwestycja__rzad">
+          <div class="inwestycja__tekst">
+            <!-- Wariant domyślny: jedno duże zdanie -->
+            <p class="intro__zdanie" data-wariant="zdanie">Dwa budynki. Cztery lokale po 100&nbsp;m². Jedna brama.</p>
+            <!-- Wariant alternatywny (?intro=fakty): statyczny pasek faktów zamiast zdania -->
+            <ul class="intro__fakty" data-wariant="fakty" hidden>
+              <li><span class="liczba">2</span><span class="opis">budynki</span></li>
+              <li><span class="liczba">4</span><span class="opis">lokale</span></li>
+              <li><span class="liczba">100&nbsp;m²</span><span class="opis">każdy lokal</span></li>
+              <li><span class="liczba">3</span><span class="opis">poziomy w każdym lokalu</span></li>
+            </ul>
+            <p class="intro__opis">Chodzieska 51 to kameralna inwestycja: dwa budynki za wspólną bramą, w każdym po dwa lokale. Wokół budynków i wzdłuż wejść zaplanowano trawniki, krzewy i drzewa. Każdy lokal ma trzy poziomy, więc część dzienną i sypialnie możesz rozdzielić piętrami.</p>
+          </div>
+          <figure class="inwestycja__zdjecie">
+            <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Wejścia do lokali C i D, przed nimi schody i nasadzenia">
+              <picture>
+                <source type="image/webp" sizes="(min-width: 900px) 46vw, 100vw" srcset="assets/img/wizualizacja-7-640.webp 640w, assets/img/wizualizacja-7-1194.webp 1194w">
+                <img src="assets/img/wizualizacja-7-1194.jpg" srcset="assets/img/wizualizacja-7-640.jpg 640w, assets/img/wizualizacja-7-1194.jpg 1194w" sizes="(min-width: 900px) 46vw, 100vw"
+                  width="1194" height="775" loading="lazy" decoding="async"
+                  alt="Wejścia do lokali C i D z tabliczkami z literami, przed nimi schody, trawnik i nasadzenia">
+              </picture>
+            </button>
+            <figcaption class="drobny">Wejścia do lokali C i D, przed nimi schody i nasadzenia</figcaption>
+          </figure>
+        </div>
+      </div>
+
+      <!-- Galeria (kotwica #galeria dla linku w nawigacji) -->
+      <div class="galeria" id="galeria" role="group" aria-labelledby="galeria-tytul">
+        <div class="wrap galeria__gora">
+          <div class="galeria__tytul">
+            <h3 id="galeria-tytul">Galeria</h3>
+            <p class="drobny">Wizualizacje mają charakter poglądowy.</p>
+          </div>
+          <div class="galeria__sterowanie">
+            <p class="galeria__licznik" aria-live="polite"><span class="wizualnie-ukryte">Zdjęcie </span><span data-licznik>1 / 6</span></p>
+            <button type="button" class="galeria__przycisk" data-kierunek="-1" aria-label="Poprzednie zdjęcie" aria-controls="galeria-okno">Poprzednie</button>
+            <button type="button" class="galeria__przycisk" data-kierunek="1" aria-label="Następne zdjęcie" aria-controls="galeria-okno">Następne</button>
+          </div>
+        </div>
+        <!-- Karuzela: przewijanie poziome ze scroll-snap; palcem, przyciskami albo strzałkami, gdy ma fokus. Bez autoodtwarzania. -->
+        <div class="galeria__okno" id="galeria-okno" tabindex="0" role="region" aria-label="Zdjęcia, przewijane w poziomie. Strzałki w lewo i w prawo zmieniają zdjęcie.">
+          <ul class="galeria__tor">
+            <li>
+              <figure>
+                <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Budynki od strony parkingu, wzdłuż chodnika trawnik i latarnie">
+                  <picture>
+                    <source type="image/webp" sizes="(min-width: 900px) 1290px, 650px" srcset="assets/img/wizualizacja-3-640.webp 640w, assets/img/wizualizacja-3-1280.webp 1280w, assets/img/wizualizacja-3-1412.webp 1412w">
+                    <img src="assets/img/wizualizacja-3-1280.jpg" srcset="assets/img/wizualizacja-3-640.jpg 640w, assets/img/wizualizacja-3-1280.jpg 1280w, assets/img/wizualizacja-3-1412.jpg 1412w" sizes="(min-width: 900px) 1290px, 650px"
+                      width="1412" height="656" loading="lazy" decoding="async"
+                      alt="Dwa budynki od strony parkingu, przed nimi parking z kostki i latarnie">
+                  </picture>
+                </button>
+                <figcaption>Budynki od strony parkingu, wzdłuż chodnika trawnik i latarnie</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Wejścia do lokali A i B od strony ogrodu">
+                  <picture>
+                    <source type="image/webp" sizes="(min-width: 900px) 930px, 470px" srcset="assets/img/wizualizacja-4-640.webp 640w, assets/img/wizualizacja-4-1194.webp 1194w">
+                    <img src="assets/img/wizualizacja-4-1194.jpg" srcset="assets/img/wizualizacja-4-640.jpg 640w, assets/img/wizualizacja-4-1194.jpg 1194w" sizes="(min-width: 900px) 930px, 470px"
+                      width="1194" height="775" loading="lazy" decoding="async"
+                      alt="Wejścia do lokali A i B z tabliczkami z literami, przed nimi chodnik i trawnik">
+                  </picture>
+                </button>
+                <figcaption>Wejścia do lokali A i B od strony ogrodu</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Taras z fotelami przy przeszklonych drzwiach na parterze">
+                  <picture>
+                    <source type="image/webp" sizes="(min-width: 900px) 930px, 470px" srcset="assets/img/wizualizacja-5-640.webp 640w, assets/img/wizualizacja-5-1194.webp 1194w">
+                    <img src="assets/img/wizualizacja-5-1194.jpg" srcset="assets/img/wizualizacja-5-640.jpg 640w, assets/img/wizualizacja-5-1194.jpg 1194w" sizes="(min-width: 900px) 930px, 470px"
+                      width="1194" height="775" loading="lazy" decoding="async"
+                      alt="Taras przy przeszklonych drzwiach z dwoma fotelami i stolikiem, obok ścianka z lamel">
+                  </picture>
+                </button>
+                <figcaption>Taras z fotelami przy przeszklonych drzwiach na parterze</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Taras z leżakami, za nim trawnik i rząd iglaków">
+                  <picture>
+                    <source type="image/webp" sizes="(min-width: 900px) 930px, 470px" srcset="assets/img/wizualizacja-6-640.webp 640w, assets/img/wizualizacja-6-1194.webp 1194w">
+                    <img src="assets/img/wizualizacja-6-1194.jpg" srcset="assets/img/wizualizacja-6-640.jpg 640w, assets/img/wizualizacja-6-1194.jpg 1194w" sizes="(min-width: 900px) 930px, 470px"
+                      width="1194" height="775" loading="lazy" decoding="async"
+                      alt="Taras z dwoma leżakami przy przeszklonych drzwiach, za nim trawnik i iglaki">
+                  </picture>
+                </button>
+                <figcaption>Taras z leżakami, za nim trawnik i rząd iglaków</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Chodnik od parkingu do wejść, obok trawnik i krzewy">
+                  <picture>
+                    <source type="image/webp" sizes="(min-width: 900px) 780px, 390px" srcset="assets/img/wizualizacja-2-640.webp 640w, assets/img/wizualizacja-2-850.webp 850w">
+                    <img src="assets/img/wizualizacja-2-850.jpg" srcset="assets/img/wizualizacja-2-640.jpg 640w, assets/img/wizualizacja-2-850.jpg 850w" sizes="(min-width: 900px) 780px, 390px"
+                      width="850" height="655" loading="lazy" decoding="async"
+                      alt="Chodnik wzdłuż budynków, latarnie, trawnik i krzewy">
+                  </picture>
+                </button>
+                <figcaption>Chodnik od parkingu do wejść, obok trawnik i krzewy</figcaption>
+              </figure>
+            </li>
+            <li>
+              <figure>
+                <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Brama wjazdowa z nazwą ulicy, za nią podjazd z kostki">
+                  <picture>
+                    <source type="image/webp" sizes="(min-width: 900px) 870px, 440px" srcset="assets/img/wizualizacja-8-640.webp 640w, assets/img/wizualizacja-8-1157.webp 1157w">
+                    <img src="assets/img/wizualizacja-8-1157.jpg" srcset="assets/img/wizualizacja-8-640.jpg 640w, assets/img/wizualizacja-8-1157.jpg 1157w" sizes="(min-width: 900px) 870px, 440px"
+                      width="1157" height="800" loading="lazy" decoding="async"
+                      alt="Brama wjazdowa z tabliczką CHODZIESKA, za nią podjazd z kostki i budynki">
+                  </picture>
+                </button>
+                <figcaption>Brama wjazdowa z nazwą ulicy, za nią podjazd z kostki</figcaption>
+              </figure>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- CTA pod galerią: liczba z data.js (main.js) -->
+      <div class="wrap cta-wiersz">
+        <p class="cta-wiersz__tekst" data-dostepnosc>Dostępne 2 z 4 lokali.</p>
+        <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
+      </div>
+    </section>
+
+    <!-- 4. Standard -->
+    <section class="sekcja sekcja--cien standard" id="standard" aria-labelledby="standard-tytul">
+      <div class="wrap">
+        <div class="sekcja__naglowek">
+          <h2 id="standard-tytul">W standardzie każdego lokalu: klimatyzacja, rekuperacja, pompa ciepła i ogrzewanie podłogowe.</h2>
+        </div>
+        <!-- Ikony: assets/icons/ikony.svg (Tabler Icons MIT + własne w stylu Tablera, tools/ikony.py) -->
+        <ul class="plansze">
+          <li class="plansza">
+            <svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#klimatyzacja"></use></svg>
+            <h3>Klimatyzacja</h3>
+            <p>Upał zostaje za oknem.</p>
+          </li>
+          <li class="plansza">
+            <svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#rekuperacja"></use></svg>
+            <h3>Rekuperacja</h3>
+            <p>Świeże, filtrowane powietrze bez otwierania okien.</p>
+          </li>
+          <li class="plansza">
+            <svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#pompa-ciepla"></use></svg>
+            <h3>Pompa ciepła</h3>
+            <!-- TODO: doprecyzować po potwierdzeniu typu pompy -->
+            <p>Energooszczędne źródło ciepła dla całego domu.</p>
+          </li>
+          <li class="plansza">
+            <svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#ogrzewanie-podlogowe"></use></svg>
+            <h3>Ogrzewanie podłogowe</h3>
+            <p>Ciepła podłoga w każdym pomieszczeniu i ściany wolne od grzejników.</p>
+          </li>
+        </ul>
+        <div class="standard__cta">
+          <a class="btn btn--drugi" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Lokale i ceny -->
+    <section class="sekcja lokale" id="lokale" aria-labelledby="lokale-tytul">
+      <div class="wrap">
+        <div class="sekcja__naglowek">
+          <h2 id="lokale-tytul">Lokale i ceny</h2>
+          <p>Ceny są jawne. Nie musisz wypełniać formularza, żeby je zobaczyć.</p>
+        </div>
+
+        <div class="lokale__uklad">
+          <figure class="wybor">
+            <div class="wybor__kadr">
+              <picture>
+                <source type="image/webp" sizes="(min-width: 1100px) 900px, (max-width: 699px) 150vw, 100vw" srcset="assets/img/wizualizacja-1-lokale-640.webp 640w, assets/img/wizualizacja-1-lokale-1280.webp 1280w, assets/img/wizualizacja-1-lokale-1400.webp 1400w">
+                <img src="assets/img/wizualizacja-1-lokale-1280.jpg" srcset="assets/img/wizualizacja-1-lokale-640.jpg 640w, assets/img/wizualizacja-1-lokale-1280.jpg 1280w, assets/img/wizualizacja-1-lokale-1400.jpg 1400w" sizes="(min-width: 1100px) 900px, (max-width: 699px) 150vw, 100vw"
+                  width="1400" height="954" loading="lazy" decoding="async"
+                  alt="Widok z lotu ptaka na dwa budynki Chodzieska 51 wśród zieleni, w tle panorama centrum Warszawy">
+              </picture>
+              <!-- Nakładka SVG z obszarami lokali: budowana w main.js z danych w data.js -->
+              <svg class="wybor__nakladka" id="wybor-nakladka" role="group" aria-label="Lokale na wizualizacji"></svg>
+            </div>
+            <figcaption class="drobny">Najedź na budynek albo wybierz literę, żeby zobaczyć dane lokalu. Podział budynków na lokale jest poglądowy.</figcaption>
+          </figure>
+
+          <div class="lokale__boczny">
+            <div class="lokale__przyciski" role="group" aria-label="Wybierz lokal">
+              <button type="button" class="przycisk-lokalu" data-lokal="A" aria-pressed="false" aria-controls="panel-lokalu">A</button>
+              <button type="button" class="przycisk-lokalu" data-lokal="B" aria-pressed="false" aria-controls="panel-lokalu">B</button>
+              <button type="button" class="przycisk-lokalu" data-lokal="C" aria-pressed="false" aria-controls="panel-lokalu">C</button>
+              <button type="button" class="przycisk-lokalu" data-lokal="D" aria-pressed="false" aria-controls="panel-lokalu">D</button>
+            </div>
+            <div class="panel-lokalu" id="panel-lokalu" aria-live="polite">
+              <p>Wybierz lokal na wizualizacji albo przyciskiem A, B, C lub D.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="dostepnosc">
+          <p class="dostepnosc__liczba" id="dostepnosc">Dostępne 2 z 4</p>
+        </div>
+
+        <div class="tabela-przewijana" tabindex="0" role="region" aria-labelledby="cennik-podpis">
+          <table class="cennik">
+            <caption id="cennik-podpis" class="wizualnie-ukryte">Cennik lokali Chodzieska 51</caption>
+            <thead>
+              <tr>
+                <th scope="col">Lokal</th>
+                <th scope="col">Powierzchnia</th>
+                <th scope="col">Poziomy</th>
+                <th scope="col">Pokoje</th>
+                <th scope="col">Ogród/taras</th>
+                <th scope="col">Cena za m²</th>
+                <th scope="col">Cena całkowita</th>
+                <th scope="col">Miejsce postojowe/komórka</th>
+                <th scope="col">Status</th>
+                <th scope="col">Historia cen</th>
+                <th scope="col">Karta lokalu</th>
+              </tr>
+            </thead>
+            <tbody id="cennik-wiersze">
+              <!-- wiersze z data.js (main.js) -->
+            </tbody>
+          </table>
+        </div>
+        <noscript><p>Cennik wymaga włączonego JavaScriptu.</p></noscript>
+
+        <div class="koszty">
+          <h3>Dodatkowe koszty</h3>
+          <p data-koszty>Cena obejmuje lokal i 2 miejsca postojowe. Koszty notarialne i opłaty sądowe ponosi kupujący.</p>
+        </div>
+      </div>
+    </section>
+
+    <dialog class="okno" id="okno-historia" aria-labelledby="okno-historia-tytul">
+      <div class="okno__wnetrze">
+        <div class="okno__gora">
+          <h2 id="okno-historia-tytul">Historia cen</h2>
+          <button type="button" class="okno__zamknij" data-zamknij>Zamknij</button>
+        </div>
+        <div id="okno-historia-tresc"></div>
+      </div>
+    </dialog>
+
+    <!-- Karta lokalu: panel z prawej (desktop) / pełny ekran (telefon); treść wstawia main.js z data.js.
+         Adres #lokal-a … #lokal-d otwiera kartę od razu. -->
+    <dialog class="karta" id="karta" aria-labelledby="karta-tytul">
+      <div class="karta__gora">
+        <div>
+          <h2 id="karta-tytul">Lokal</h2>
+          <p class="karta__status" id="karta-status"></p>
+        </div>
+        <button type="button" class="btn btn--drugi" data-zamknij>Zamknij</button>
+      </div>
+      <div class="karta__tresc" id="karta-tresc"></div>
+    </dialog>
+
+    <!-- Podgląd zdjęć na pełnym ekranie (galeria i render 7); treść wstawia main.js -->
+    <dialog class="podglad" id="podglad" aria-label="Podgląd zdjęcia">
+      <div class="podglad__gora">
+        <p class="podglad__licznik" aria-live="polite"></p>
+        <button type="button" class="btn btn--jasny" data-zamknij>Zamknij</button>
+      </div>
+      <figure class="podglad__scena">
+        <div class="podglad__obraz"></div>
+        <figcaption class="podglad__podpis"></figcaption>
+      </figure>
+      <div class="podglad__nawigacja">
+        <button type="button" class="btn btn--jasny" data-kierunek="-1" aria-label="Poprzednie zdjęcie">Poprzednie</button>
+        <button type="button" class="btn btn--jasny" data-kierunek="1" aria-label="Następne zdjęcie">Następne</button>
+      </div>
+    </dialog>
+
+    <!-- 6. Lokalizacja -->
+    <section class="sekcja lokalizacja" id="lokalizacja" aria-labelledby="lokalizacja-tytul">
+      <div class="wrap">
+        <div class="sekcja__naglowek">
+          <h2 id="lokalizacja-tytul">Lokalizacja</h2>
+          <p>ul. Chodzieska 51, Warszawa, dzielnica Wawer.</p>
+        </div>
+        <div class="lokalizacja__uklad">
+          <div>
+            <div class="mapa" id="mapa" role="region" aria-label="Mapa okolicy ul. Chodzieskiej"></div>
+          </div>
+          <div>
+            <fieldset class="filtry">
+              <legend>Pokaż na mapie</legend>
+              <div class="filtry__lista">
+                <button type="button" class="filtr" data-kategoria="szkoly" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#szkoly"></use></svg>Szkoły</button>
+                <button type="button" class="filtr" data-kategoria="sklepy" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#sklepy"></use></svg>Sklepy</button>
+                <button type="button" class="filtr" data-kategoria="komunikacja" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#komunikacja"></use></svg>Komunikacja</button>
+                <button type="button" class="filtr" data-kategoria="zielen" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zielen"></use></svg>Zieleń</button>
+              </div>
+            </fieldset>
+            <div class="dojazdy">
+              <h3>Czas dojazdu autem</h3>
+              <dl id="dojazdy"></dl>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pas CTA między Lokalizacją a dalszą częścią strony (ciemny, pionowe prążkowanie) -->
+    <section class="ciemna pas-cta" aria-label="Zapytaj o lokal">
+      <div class="wrap pas-cta__wnetrze">
+        <p class="pas-cta__tekst"><span data-dostepnosc>Dostępne 2 z 4 lokali.</span> Odpowiemy na pytania o ceny, termin i standard.</p>
+        <div class="pas-cta__akcje">
+          <a class="btn btn--jasny" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+          <a class="pas-cta__tel" href="tel:+48690888849" data-telefon="pelny">Zadzwoń: +48 690 888 849</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Kolejne inwestycje -->
+    <section class="sekcja sekcja--cien kolejne" id="kolejne" aria-labelledby="kolejne-tytul">
+      <div class="wrap kolejne__uklad">
+        <div>
+          <h2 id="kolejne-tytul">Kolejne inwestycje</h2>
+          <p><span data-spolka-nazwa>Sanit Investments</span> przygotowuje kolejne projekty. Zostaw e-mail, a damy znać, gdy ruszy sprzedaż.</p>
+        </div>
+        <div>
+          <form id="formularz-powiadomienia" action="/api/powiadomienia" method="post" novalidate>
+            <div class="pole">
+              <input type="email" id="pow-email" name="email" placeholder=" " autocomplete="email" required aria-describedby="pow-email-blad">
+              <label for="pow-email">E-mail</label>
+              <span class="blad" id="pow-email-blad" hidden></span>
+            </div>
+            <div class="zgoda">
+              <input type="checkbox" id="pow-zgoda" name="zgoda_powiadomienia" value="tak" required aria-describedby="pow-zgoda-blad">
+              <div>
+                <label for="pow-zgoda">Zgadzam się na otrzymywanie od Sanit Investments, ul. Żerzeńska 31, Warszawa, e-maili z informacjami o kolejnych inwestycjach. Zgodę mogę wycofać w każdej chwili. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</label><!-- treść POGLĄDOWA, do weryfikacji przez prawnika -->
+                <span class="blad" id="pow-zgoda-blad" hidden></span>
+              </div>
+            </div>
+            <button class="btn" type="submit">Zapisz mnie na powiadomienia</button>
+          </form>
+          <div class="sukces" id="powiadomienia-sukces" hidden tabindex="-1">
+            <h3>Zapisano na powiadomienia</h3>
+            <p>Damy znać e-mailem, gdy ruszy sprzedaż kolejnej inwestycji.</p>
+            <p class="drobny">W wersji roboczej dane nie są nigdzie wysyłane.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Kontakt -->
+    <section class="sekcja kontakt" id="kontakt" aria-labelledby="kontakt-naglowek">
+      <div class="wrap kontakt__uklad">
+        <div>
+          <figure class="kontakt__zdjecie">
+            <picture>
+              <source type="image/webp" sizes="(min-width: 1000px) 50vw, 100vw" srcset="assets/img/wizualizacja-8-640.webp 640w, assets/img/wizualizacja-8-1157.webp 1157w">
+              <img src="assets/img/wizualizacja-8-1157.jpg" srcset="assets/img/wizualizacja-8-640.jpg 640w, assets/img/wizualizacja-8-1157.jpg 1157w" sizes="(min-width: 1000px) 50vw, 100vw"
+                width="1157" height="800" loading="lazy" decoding="async"
+                alt="Brama wjazdowa z tabliczką CHODZIESKA, za nią podjazd i budynki">
+            </picture>
+          </figure>
+          <div class="kontakt__dane">
+            <dl>
+              <div><dt>Opiekun</dt><dd data-kontakt="osoba">Marta Nowak</dd></div>
+              <div><dt>Telefon</dt><dd data-kontakt="telefon"><a href="tel:+48690888849">+48 690 888 849</a></dd></div>
+              <div><dt>E-mail</dt><dd data-kontakt="email"><a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a></dd></div>
+            </dl>
+            <div class="opiekun-placeholder" role="img" aria-label="Miejsce na zdjęcie opiekuna klienta">
+              <span class="placeholder">[DO UZUPEŁNIENIA: zdjęcie opiekuna klienta]</span>
+            </div>
+          </div>
+        </div>
+
+        <div>
+          <h2 id="kontakt-naglowek" tabindex="-1">Zapytaj o lokal</h2>
+          <p class="kontakt__intro">Zostaw dane, a opiekun klienta oddzwoni albo odpisze.</p>
+
+          <form id="formularz-kontakt" action="/api/kontakt" method="post" novalidate>
+            <div class="pole">
+              <input type="text" id="k-imie" name="imie" placeholder=" " autocomplete="given-name" required aria-describedby="k-imie-blad">
+              <label for="k-imie">Imię</label>
+              <span class="blad" id="k-imie-blad" hidden></span>
+            </div>
+            <div class="pole">
+              <input type="tel" id="k-telefon" name="telefon" placeholder=" " autocomplete="tel" inputmode="tel" required aria-describedby="k-telefon-blad">
+              <label for="k-telefon">Telefon</label>
+              <span class="blad" id="k-telefon-blad" hidden></span>
+            </div>
+            <div class="pole">
+              <input type="email" id="k-email" name="email" placeholder=" " autocomplete="email" required aria-describedby="k-email-blad">
+              <label for="k-email">E-mail</label>
+              <span class="blad" id="k-email-blad" hidden></span>
+            </div>
+            <div class="pole">
+              <textarea id="k-wiadomosc" name="wiadomosc" placeholder=" " rows="4"></textarea>
+              <label for="k-wiadomosc">Wiadomość (opcjonalnie)</label>
+            </div>
+
+            <fieldset class="grupa" id="k-forma-grupa" aria-describedby="k-forma-blad">
+              <legend>Preferowana forma kontaktu</legend>
+              <div class="wybory">
+                <label class="wybor-opcja"><input type="radio" name="forma_kontaktu" value="telefon"><span>Telefon</span></label>
+                <label class="wybor-opcja"><input type="radio" name="forma_kontaktu" value="email"><span>E-mail</span></label>
+              </div>
+              <span class="blad" id="k-forma-blad" hidden></span>
+            </fieldset>
+
+            <fieldset class="grupa">
+              <legend>Zgody</legend>
+              <div class="zgoda zgoda--wszystkie">
+                <input type="checkbox" id="k-zgody-wszystkie">
+                <label for="k-zgody-wszystkie">Zaznacz wszystkie</label>
+              </div>
+              <div class="zgoda">
+                <input type="checkbox" id="k-zgoda-email" name="zgoda_email" value="tak" data-zgoda aria-describedby="k-zgoda-email-blad">
+                <div>
+                  <label for="k-zgoda-email">Zgadzam się na kontakt e-mailowy w sprawie mojego zapytania.</label>
+                  <span class="blad" id="k-zgoda-email-blad" hidden></span>
+                </div>
+              </div>
+              <div class="zgoda">
+                <input type="checkbox" id="k-zgoda-telefon" name="zgoda_telefon" value="tak" data-zgoda aria-describedby="k-zgoda-telefon-blad">
+                <div>
+                  <label for="k-zgoda-telefon">Zgadzam się na kontakt telefoniczny w sprawie mojego zapytania.</label>
+                  <span class="blad" id="k-zgoda-telefon-blad" hidden></span>
+                </div>
+              </div>
+              <div class="zgoda">
+                <input type="checkbox" id="k-zgoda-polityka" name="zgoda_polityka" value="tak" data-zgoda required aria-describedby="k-zgoda-polityka-blad">
+                <div>
+                  <label for="k-zgoda-polityka">Akceptuję <a href="polityka-prywatnosci.html">politykę prywatności</a>.</label>
+                  <span class="blad" id="k-zgoda-polityka-blad" hidden></span>
+                </div>
+              </div>
+              <details class="klauzule">
+                <summary>Pełna treść klauzul</summary>
+                <!-- Treść POGLĄDOWA, do weryfikacji przez prawnika -->
+                <p>Administratorem Twoich danych osobowych jest Sanit Investments, ul. Żerzeńska 31, Warszawa. Dane z formularza (imię, telefon, e-mail, treść wiadomości) przetwarzamy, żeby odpowiedzieć na zapytanie i skontaktować się z Tobą w wybrany sposób (art. 6 ust. 1 lit. a i b RODO). Podanie danych jest dobrowolne, ale bez nich nie odpowiemy na zapytanie.</p>
+                <p>Dane przechowujemy do zakończenia rozmów o zakupie lokalu, a potem przez okres przedawnienia ewentualnych roszczeń. Odbiorcami danych mogą być firmy, które świadczą nam usługi hostingu i poczty elektronicznej. Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania i przeniesienia, a także prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</p>
+                <p>Zgody na kontakt e-mailowy i telefoniczny możesz wycofać w każdej chwili, pisząc na <a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a>. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed jej wycofaniem. Więcej w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
+              </details>
+            </fieldset>
+
+            <button class="btn" type="submit" id="k-wyslij">Wyślij zapytanie</button>
+          </form>
+
+          <div class="sukces" id="kontakt-sukces" hidden tabindex="-1">
+            <h3 id="kontakt-sukces-tytul">Wysłano zapytanie</h3>
+            <p>Dziękujemy. Opiekun klienta odezwie się w wybrany przez Ciebie sposób.</p>
+            <p class="drobny">W wersji roboczej dane nie są nigdzie wysyłane.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 9. Stopka -->
+  <footer class="ciemna stopka">
+    <div class="wrap">
+      <div class="stopka__siatka">
+        <div>
+          <h2>Deweloper</h2>
+          <dl>
+            <div><dt>Nazwa</dt><dd data-spolka="nazwa">Sanit Investments</dd></div>
+            <div><dt>Adres</dt><dd data-spolka="adres">ul. Żerzeńska 31, Warszawa</dd></div>
+            <div><dt>Telefon</dt><dd data-spolka="telefon"><a href="tel:+48690888849">+48 690 888 849</a></dd></div>
+            <div><dt>E-mail</dt><dd data-spolka="email"><a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a></dd></div>
+            <div><dt>KRS</dt><dd data-spolka="krs">0000000000</dd></div>
+            <div><dt>NIP</dt><dd data-spolka="nip">111-111-11-11</dd></div>
+          </dl>
+        </div>
+        <div>
+          <h2>Informacje</h2>
+          <ul>
+            <li><a href="polityka-prywatnosci.html">Polityka prywatności</a></li>
+            <li><a href="polityka-prywatnosci.html#cookies">Cookies</a></li>
+          </ul>
+        </div>
+        <div>
+          <h2>Zastrzeżenie</h2>
+          <p class="stopka__zastrzezenie">Wizualizacje mają charakter poglądowy. Informacje na stronie nie stanowią oferty w rozumieniu art. 66 § 1 Kodeksu cywilnego.</p>
+        </div>
+      </div>
+      <p class="stopka__dol">© <span id="rok">2026</span> <span data-spolka="nazwa">Sanit Investments</span></p>
+    </div>
+  </footer>
+
+  <!-- Telefon: przyklejony dolny pasek (po hero, chowa się przy Kontakcie i stopce) -->
+  <nav class="pasek-dolny" id="pasek-dolny" aria-label="Szybki kontakt">
+    <a class="btn btn--drugi" href="tel:+48690888849" data-telefon="krotki">Zadzwoń</a>
+    <a class="btn" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+  </nav>
+</body>
+</html>
