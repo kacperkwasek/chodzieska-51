@@ -48,6 +48,7 @@
   function lokal(id) { return D.lokale.filter(function (l) { return l.id === id; })[0]; }
 
   function przewinDo(target, focusEl) {
+    zatrzymajPrzejazd();
     target.scrollIntoView({ behavior: ruchOgraniczony.matches ? 'auto' : 'smooth', block: 'start' });
     if (focusEl) focusEl.focus({ preventScroll: true });
   }
@@ -101,6 +102,21 @@
 
   /* ---------- Nawigacja ---------- */
 
+  /* Hero: tekst zaczyna się równo z pierwszym linkiem nawigacji („O inwestycji”), gdy linki są widoczne */
+  function wyrownajHero() {
+    var hero = $('.hero');
+    var link = $('.nav__linki a');
+    if (!hero || !link) return;
+    function ustaw() {
+      var x = link.getBoundingClientRect().left;
+      if (x > 0 && window.matchMedia('(min-width: 900px)').matches) hero.style.setProperty('--hero-wciecie', Math.round(x) + 'px');
+      else hero.style.removeProperty('--hero-wciecie');
+    }
+    ustaw();
+    window.addEventListener('resize', ustaw);
+    if (document.fonts) document.fonts.ready.then(ustaw); // szerokość logo zależy od fontu
+  }
+
   function nawigacja() {
     var nav = $('#nav');
     var przycisk = $('.nav__menu-przycisk');
@@ -141,9 +157,8 @@
     var okno = $('#galeria-okno');
     if (!okno) return;
     var zdjecia = $$('.galeria__tor > li', okno);
-    var licznik = $('[data-licznik]');
-    var poprzedni = $('.galeria__przycisk[data-kierunek="-1"]');
-    var nastepny = $('.galeria__przycisk[data-kierunek="1"]');
+    var wstecz = $('.galeria__strzalka[data-kierunek="-1"]');
+    var dalej = $('.galeria__strzalka[data-kierunek="1"]');
 
     function maksimum() { return okno.scrollWidth - okno.clientWidth; }
     // pozycja przewinięcia, przy której zdjęcie i stoi przy lewej krawędzi (nie dalej niż koniec toru)
@@ -159,21 +174,41 @@
       return najblizsze;
     }
 
+    // Strzałki przy krawędziach panelu; na końcach znikają (bez zapętlania).
     function odswiez() {
-      licznik.textContent = (biezace() + 1) + ' / ' + zdjecia.length;
-      poprzedni.disabled = okno.scrollLeft <= 2;
-      nastepny.disabled = okno.scrollLeft >= maksimum() - 2;
+      wstecz.disabled = okno.scrollLeft <= 2;
+      dalej.disabled = okno.scrollLeft >= maksimum() - 2;
     }
 
-    // cel trwającej płynnej animacji: kolejne kroki liczą się od niego, nie od bieżącej pozycji
-    var cel = { x: 0, czas: -1e9 };
+    /* Przesuw do zdjęcia własną animacją. scroll-snap jest wyłączony na czas ruchu i włączany
+       dopiero na miejscu (na punkcie dociągnięcia), więc nic nie szarpie w trakcie. */
+    var animacja = 0;
+    var cel = null; // cel trwającego przesuwu: kolejne kliknięcia liczą się od niego
     function przewin(x) {
-      cel = { x: x, czas: performance.now() };
-      // przy prefers-reduced-motion bez płynnej animacji
-      okno.scrollTo({ left: x, behavior: ruchOgraniczony.matches ? 'instant' : 'smooth' });
+      cancelAnimationFrame(animacja);
+      x = Math.max(0, Math.min(maksimum(), Math.round(x)));
+      var od = okno.scrollLeft, droga = x - od;
+      okno.classList.add('bez-snap');
+      if (ruchOgraniczony.matches || Math.abs(droga) < 1) { // bez płynnej animacji
+        okno.scrollLeft = x;
+        okno.classList.remove('bez-snap');
+        cel = null;
+        return;
+      }
+      cel = x;
+      var czas = Math.min(650, 280 + Math.abs(droga) * 0.3), start = performance.now();
+      function klatka(teraz) {
+        var t = Math.min(1, (teraz - start) / czas);
+        okno.scrollLeft = od + droga * (1 - Math.pow(1 - t, 3)); // wyhamowanie (ease-out)
+        if (t < 1) { animacja = requestAnimationFrame(klatka); return; }
+        animacja = 0;
+        cel = null;
+        okno.classList.remove('bez-snap');
+      }
+      animacja = requestAnimationFrame(klatka);
     }
     function idz(kierunek) {
-      var x = performance.now() - cel.czas < 700 ? cel.x : okno.scrollLeft;
+      var x = cel !== null ? cel : okno.scrollLeft;
       var dokad = null;
       if (kierunek > 0) {
         for (var i = 0; i < zdjecia.length; i++) if (pozycja(i) > x + 2) { dokad = pozycja(i); break; }
@@ -183,8 +218,8 @@
       if (dokad !== null) przewin(dokad);
     }
 
-    poprzedni.addEventListener('click', function () { idz(-1); });
-    nastepny.addEventListener('click', function () { idz(1); });
+    wstecz.addEventListener('click', function () { idz(-1); });
+    dalej.addEventListener('click', function () { idz(1); });
     okno.addEventListener('keydown', function (e) {
       if (e.key === 'ArrowRight') { e.preventDefault(); idz(1); }
       else if (e.key === 'ArrowLeft') { e.preventDefault(); idz(-1); }
@@ -192,43 +227,46 @@
       else if (e.key === 'End') { e.preventDefault(); przewin(maksimum()); }
     });
 
-    /* Przeciąganie myszą: wciśnięty przycisk i ruch w poziomie. Ruch < 5 px to kliknięcie
-       (np. otwarcie podglądu). Po puszczeniu galeria dociąga się do najbliższego zdjęcia.
-       Dotyk zostaje natywny (przewijanie palcem ze scroll-snap). */
+    /* Przeciąganie myszą. Ruch < 5 px to kliknięcie (otwarcie podglądu). Przesunięcie liczy się
+       od miejsca, w którym przekroczono próg (bez skoku o 5 px). Wciśnięcie myszy nie daje fokusu
+       zdjęciu (fokus przewinąłby galerię do częściowo widocznego zdjęcia). Po puszczeniu galeria
+       dojeżdża do najbliższego zdjęcia, a przy ruchu > 80 px co najmniej do sąsiedniego.
+       Dotyk i poziomy gest gładzika zostają natywne (scroll-snap). */
     var drag = null;
     var bylyPrzeciagniecie = false;
     $$('img', okno).forEach(function (img) { img.draggable = false; });
+    okno.addEventListener('mousedown', function (e) { if (e.button === 0) e.preventDefault(); });
     okno.addEventListener('pointerdown', function (e) {
       if (e.pointerType !== 'mouse' || e.button !== 0) return;
-      drag = { id: e.pointerId, x: e.clientX, start: okno.scrollLeft, indeks: biezace(), ruch: false, dx: 0 };
+      cancelAnimationFrame(animacja);
+      animacja = 0;
+      cel = null;
+      drag = { id: e.pointerId, x0: e.clientX, x: 0, start: 0, indeks: biezace(), ruch: false, dx: 0 };
     });
     okno.addEventListener('pointermove', function (e) {
       if (!drag || e.pointerId !== drag.id) return;
-      var dx = drag.dx = e.clientX - drag.x;
-      if (!drag.ruch && Math.abs(dx) >= 5) {
+      if (!drag.ruch) {
+        if (Math.abs(e.clientX - drag.x0) < 5) return;
         drag.ruch = true;
-        okno.classList.add('is-przeciagana'); // bez scroll-snap w trakcie, kursor grabbing
+        drag.x = e.clientX;
+        drag.start = okno.scrollLeft;
+        okno.classList.add('bez-snap', 'is-przeciagana');
         okno.setPointerCapture(e.pointerId);
       }
-      if (drag.ruch) okno.scrollLeft = drag.start - dx;
+      drag.dx = e.clientX - drag.x0;
+      okno.scrollLeft = drag.start - (e.clientX - drag.x);
     });
     function koniecPrzeciagania() {
       if (!drag) return;
       var d = drag;
       drag = null;
       if (!d.ruch) return;
+      okno.classList.remove('is-przeciagana');
       bylyPrzeciagniecie = true;
       setTimeout(function () { bylyPrzeciagniecie = false; }, 50);
-      // najbliższe zdjęcie; przy ruchu > 80 px co najmniej jedno zdjęcie w stronę przeciągnięcia
       var i = biezace();
       if (i === d.indeks && Math.abs(d.dx) > 80) i = Math.max(0, Math.min(zdjecia.length - 1, i + (d.dx < 0 ? 1 : -1)));
       przewin(pozycja(i));
-      // scroll-snap wraca po dojechaniu do zdjęcia
-      var wroc = function () { okno.classList.remove('is-przeciagana'); };
-      if ('onscrollend' in window && !ruchOgraniczony.matches) {
-        okno.addEventListener('scrollend', wroc, { once: true });
-        setTimeout(wroc, 800);
-      } else wroc();
     }
     okno.addEventListener('pointerup', koniecPrzeciagania);
     okno.addEventListener('pointercancel', koniecPrzeciagania);
@@ -236,28 +274,6 @@
     okno.addEventListener('click', function (e) {
       if (bylyPrzeciagniecie) { e.preventDefault(); e.stopPropagation(); bylyPrzeciagniecie = false; }
     }, true);
-
-    /* Kółko myszy nad galerią:
-       - ruch poziomy (gładzik) zostaje natywny,
-       - pionowe kółko przesuwa galerię dopiero, gdy kursor stoi nad nią ≥ 400 ms, a strona
-         w tym czasie się nie przewijała; przy szybkim przewijaniu strona jedzie dalej,
-       - na pierwszym / ostatnim zdjęciu kółko znów przewija stronę. */
-    var nadGaleria = 0, przewijanieStrony = 0, ostatniKrok = 0;
-    okno.addEventListener('pointerenter', function (e) { if (e.pointerType === 'mouse') nadGaleria = performance.now(); });
-    okno.addEventListener('pointerleave', function () { nadGaleria = 0; });
-    window.addEventListener('scroll', function () { przewijanieStrony = performance.now(); }, { passive: true });
-    okno.addEventListener('wheel', function (e) {
-      if (e.ctrlKey || Math.abs(e.deltaX) >= Math.abs(e.deltaY)) return;
-      var teraz = performance.now();
-      if (!nadGaleria || teraz - Math.max(nadGaleria, przewijanieStrony) < 400) return;
-      var x = okno.scrollLeft;
-      if (e.deltaY > 0 && x >= maksimum() - 2) return;
-      if (e.deltaY < 0 && x <= 2) return;
-      e.preventDefault();
-      if (teraz - ostatniKrok < 350) return; // jeden krok na gest (gładzik wysyła serię zdarzeń)
-      ostatniKrok = teraz;
-      idz(e.deltaY > 0 ? 1 : -1);
-    }, { passive: false });
 
     var zaplanowane = false;
     okno.addEventListener('scroll', function () {
@@ -655,7 +671,7 @@
     szkoly: 'Szkoła',
     sklepy: 'Sklep',
     komunikacja: 'Komunikacja',
-    zielen: 'Zieleń',
+    zielen: 'Rekreacja',
   };
 
   /*
@@ -794,7 +810,7 @@
     var probowano = false;
 
     var imie = $('#k-imie'), tel = $('#k-telefon'), email = $('#k-email');
-    var zgodaEmail = $('#k-zgoda-email'), zgodaTel = $('#k-zgoda-telefon'), zgodaPolityka = $('#k-zgoda-polityka');
+    var zgodaKontakt = $('#k-zgoda-kontakt'), zgodaPolityka = $('#k-zgoda-polityka');
     var wszystkie = $('#k-zgody-wszystkie');
     var zgody = $$('[data-zgoda]', form);
 
@@ -818,8 +834,7 @@
       ok = pokazBlad(null, $('#k-forma-blad'), !forma ? 'Wybierz, czy wolisz kontakt telefoniczny czy e-mailowy.' : '') && ok;
       $('#k-forma-grupa').toggleAttribute('data-blad', !forma);
 
-      ok = pokazBlad(zgodaTel, $('#k-zgoda-telefon-blad'), forma === 'telefon' && !zgodaTel.checked ? 'Zaznacz zgodę na kontakt telefoniczny albo wybierz kontakt e-mailowy.' : '') && ok;
-      ok = pokazBlad(zgodaEmail, $('#k-zgoda-email-blad'), forma === 'email' && !zgodaEmail.checked ? 'Zaznacz zgodę na kontakt e-mailowy albo wybierz kontakt telefoniczny.' : '') && ok;
+      ok = pokazBlad(zgodaKontakt, $('#k-zgoda-kontakt-blad'), !zgodaKontakt.checked ? 'Zaznacz zgodę na kontakt, żebyśmy mogli odpowiedzieć na zapytanie.' : '') && ok;
       ok = pokazBlad(zgodaPolityka, $('#k-zgoda-polityka-blad'), !zgodaPolityka.checked ? 'Zaakceptuj politykę prywatności, żebyśmy mogli odpowiedzieć na zapytanie.' : '') && ok;
       return ok;
     }
@@ -834,6 +849,10 @@
       if (probowano) waliduj();
     });
     zgody.forEach(function (z) { z.addEventListener('change', stanWszystkich); });
+    // zgody nigdy nie są zaznaczone z góry, także po odświeżeniu strony (przeglądarki przywracają stan pól)
+    function odznaczZgody() { zgody.concat([wszystkie]).forEach(function (z) { z.checked = false; }); stanWszystkich(); }
+    odznaczZgody();
+    window.addEventListener('pageshow', odznaczZgody);
 
     form.addEventListener('change', function () { if (probowano) waliduj(); });
     form.addEventListener('input', function () { if (probowano) waliduj(); });
@@ -876,8 +895,12 @@
         if (!obecny || AUTO.test(obecny)) wiadomosc.value = tekst;
         else if (obecny.indexOf(tekst) === -1) wiadomosc.value = tekst + '\n\n' + wiadomosc.value; // tekst użytkownika zostaje
       }
-      przewinDo($('#kontakt'), id ? wiadomosc : naglowek);
+      // kursor na końcu wiadomości ustawiamy przed przewinięciem (zrobione później przerywa płynne przewijanie)
       if (id) wiadomosc.setSelectionRange(wiadomosc.value.length, wiadomosc.value.length);
+      // desktop: cała sekcja (zdjęcie i formularz mieszczą się na ekranie); węższe układy: formularz stoi
+      // pod zdjęciem i danymi kontaktowymi, więc przewijamy prosto do jego nagłówka
+      var doFormularza = !window.matchMedia('(min-width: 1000px)').matches;
+      przewinDo(doFormularza ? naglowek : $('#kontakt'), id ? wiadomosc : naglowek);
       history.replaceState(null, '', '#kontakt');
     });
   }
@@ -908,6 +931,130 @@
     });
   }
 
+  /* ---------- Przewijanie do sekcji ---------- */
+  /*
+   * Jeden gest kółka / gładzika = jeden płynny przejazd do początku następnej (albo poprzedniej)
+   * sekcji, wyrównany do dolnej krawędzi nawigacji, tak żeby sekcja wypełniała ekran.
+   * Sekcje wyższe niż ekran przewijają się ekranami (z zakładką), więc nic nie jest pomijane.
+   * Krótkie sekcje widoczne już w całości (np. pas CTA nad „Kolejnymi inwestycjami”) nie
+   * zatrzymują przejazdu na kilkadziesiąt pikseli.
+   * Zwykłe przewijanie zostaje: przy prefers-reduced-motion, przy dotyku, przy poziomym geście
+   * gładzika, z Ctrl (zoom), gdy otwarte jest okno albo menu i nad elementem, który sam się
+   * przewija w pionie (karta lokalu, panel menu, pole wiadomości). Galeria nie reaguje na pionowe
+   * kółko, więc nie zatrzymuje przejazdu. Klawiatura i pasek przewijania działają jak zwykle.
+   */
+  var zatrzymajPrzejazd = function () {}; // ustawiane w przewijanieDoSekcji(); wołane przed przewijaniem programowym
+  var CZAS_PRZEJAZDU = { min: 500, max: 1000, msNaPx: 0.45 }; // czas = 300 ms + 0,45 ms/px, w granicach
+  var ZAKLADKA = 80;        // ile pikseli poprzedniego ekranu zostaje widać przy przewijaniu wysokiej sekcji
+  var TOLERANCJA = 120;     // sekcja tylko o tyle wyższa od ekranu nie jest dzielona (to głównie jej dolny odstęp)
+
+  function przewijanieDoSekcji() {
+    var animacja = 0;
+    var ustawionePrzezNas = -1;
+    var koniecPrzejazdu = 0;
+    var ostatnieKolko = 0;
+
+    function maksimum() { return document.documentElement.scrollHeight - window.innerHeight; }
+    function wysokoscNawigacji() { var n = $('#nav'); return n ? n.offsetHeight : 0; }
+
+    function przewijaSieSam(el, deltaY) {
+      for (; el && el !== document.body && el !== document.documentElement; el = el.parentElement) {
+        var cs = getComputedStyle(el);
+        if (!/(auto|scroll)/.test(cs.overflowY) || el.scrollHeight <= el.clientHeight) continue;
+        if (deltaY > 0 ? el.scrollTop + el.clientHeight < el.scrollHeight - 1 : el.scrollTop > 0) return true;
+      }
+      return false;
+    }
+
+    // Punkty zatrzymania: początek każdej sekcji pod nawigacją, a w wysokich sekcjach co ekran i jej koniec.
+    function punkty() {
+      var vh = window.innerHeight, nav = wysokoscNawigacji(), max = maksimum();
+      var ekran = vh - nav;
+      var krok = ekran - ZAKLADKA;
+      var lista = [];
+      $$('#gora, main > section, body > footer').forEach(function (sekcja, i) {
+        var gora = sekcja.getBoundingClientRect().top + window.scrollY;
+        var dol = gora + sekcja.offsetHeight;
+        var start = i === 0 ? 0 : gora - nav;
+        lista.push(start);
+        if (sekcja.offsetHeight > ekran + TOLERANCJA) {
+          for (var y = start + krok; y < dol - vh; y += krok) lista.push(y);
+          lista.push(dol - vh);
+        }
+      });
+      return lista.map(function (y) { return Math.round(Math.max(0, Math.min(max, y))); })
+        .filter(function (y, i, a) { return a.indexOf(y) === i; })
+        .sort(function (x, y) { return x - y; });
+    }
+
+    // Cel w danym kierunku: pierwszy punkt co najmniej 30% ekranu dalej, ale nie dalej niż ekran
+    // (wtedy najdalszy punkt w zasięgu ekranu, żeby nie przeskoczyć treści).
+    function cel(kierunek) {
+      var y = window.scrollY, vh = window.innerHeight;
+      var zasieg = vh - wysokoscNawigacji() + TOLERANCJA;
+      var minimum = vh * 0.3;
+      var p = punkty();
+      if (kierunek < 0) p = p.slice().reverse();
+      var dalej = p.filter(function (c) { return kierunek > 0 ? c > y + 1 : c < y - 1; });
+      if (!dalej.length) return null;
+      var odl = function (c) { return Math.abs(c - y); };
+      var kandydat = dalej.filter(function (c) { return odl(c) >= minimum; })[0];
+      if (kandydat === undefined) return dalej[dalej.length - 1];
+      if (odl(kandydat) <= zasieg) return kandydat;
+      var wZasiegu = dalej.filter(function (c) { return odl(c) <= zasieg; });
+      return wZasiegu.length ? wZasiegu[wZasiegu.length - 1] : kandydat;
+    }
+
+    function wygladzenie(t) { return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2; } // ease-in-out (sześcienne)
+
+    function jedz(doY) {
+      stop();
+      var odY = window.scrollY, droga = doY - odY;
+      if (Math.abs(droga) < 1) return;
+      var czas = Math.max(CZAS_PRZEJAZDU.min, Math.min(CZAS_PRZEJAZDU.max, 300 + Math.abs(droga) * CZAS_PRZEJAZDU.msNaPx));
+      var start = performance.now();
+      function klatka(teraz) {
+        // zewnętrzne przewinięcie (kotwica, klawiatura, pasek przewijania) przerywa przejazd
+        if (ustawionePrzezNas >= 0 && Math.abs(window.scrollY - ustawionePrzezNas) > 2) { stop(); return; }
+        var t = Math.min(1, (teraz - start) / czas);
+        window.scrollTo({ top: odY + droga * wygladzenie(t), behavior: 'instant' });
+        ustawionePrzezNas = window.scrollY;
+        if (t < 1) animacja = requestAnimationFrame(klatka);
+        else { stop(); koniecPrzejazdu = performance.now(); }
+      }
+      animacja = requestAnimationFrame(klatka);
+    }
+    function stop() {
+      cancelAnimationFrame(animacja);
+      animacja = 0;
+      ustawionePrzezNas = -1;
+    }
+
+    zatrzymajPrzejazd = stop;
+    // kliknięcie (np. link do sekcji, pasek przewijania), klawiatura i dotyk przejmują przewijanie
+    ['mousedown', 'keydown', 'touchstart'].forEach(function (typ) {
+      window.addEventListener(typ, function () { if (animacja) stop(); }, { passive: true, capture: true });
+    });
+
+    window.addEventListener('wheel', function (e) {
+      if (e.defaultPrevented || e.ctrlKey || ruchOgraniczony.matches) return;
+      if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) return;
+      if (document.querySelector('dialog[open]') || document.body.classList.contains('menu-otwarte')) return;
+      if (przewijaSieSam(e.target, e.deltaY)) return;
+      e.preventDefault();
+      var teraz = performance.now();
+      var przerwa = teraz - ostatnieKolko;
+      ostatnieKolko = teraz;
+      if (animacja) return; // w trakcie przejazdu kolejne zdarzenia tego samego gestu są pomijane
+      // nowy gest: przerwa w zdarzeniach albo wyraźny obrót po zakończonym przejeździe
+      // (bezwładność gładzika po przejeździe wysyła drobne zdarzenia, które nie startują kolejnego)
+      var nowyGest = przerwa > 180 || (teraz - koniecPrzejazdu > 350 && Math.abs(e.deltaY) >= 20);
+      if (!nowyGest) return;
+      var doY = cel(e.deltaY > 0 ? 1 : -1);
+      if (doY !== null) jedz(doY);
+    }, { passive: false });
+  }
+
   /* ---------- Start ---------- */
 
   function start() {
@@ -915,6 +1062,7 @@
     wypelnijDane();
     wariantIntro();
     nawigacja();
+    wyrownajHero();
     nakladkaLokali();
     cennik();
     oknaZamykanie();
@@ -924,6 +1072,7 @@
     podglad();
     karta();
     pasekDolny();
+    przewijanieDoSekcji();
     mapaLeniwie();
   }
 

@@ -43,7 +43,7 @@
       <a class="nav__logo" href="#gora" aria-label="Chodzieska 51, początek strony">Chodzieska 51</a>
       <nav aria-label="Główna">
         <ul class="nav__linki">
-          <li><a href="#inwestycja">Inwestycja</a></li>
+          <li><a href="#inwestycja">O inwestycji</a></li>
           <li><a href="#galeria">Galeria</a></li>
           <li><a href="#standard">Standard</a></li>
           <li><a href="#lokale">Lokale i ceny</a></li>
@@ -63,7 +63,7 @@
   <div class="nav__panel" id="menu-panel" hidden>
     <nav aria-label="Menu">
       <ul>
-        <li><a href="#inwestycja">Inwestycja</a></li>
+        <li><a href="#inwestycja">O inwestycji</a></li>
         <li><a href="#galeria">Galeria</a></li>
         <li><a href="#standard">Standard</a></li>
         <li><a href="#lokale">Lokale i ceny</a></li>
@@ -145,14 +145,13 @@
             <h3 id="galeria-tytul">Galeria</h3>
             <p class="drobny">Wizualizacje mają charakter poglądowy.</p>
           </div>
-          <div class="galeria__sterowanie">
-            <p class="galeria__licznik" aria-live="polite"><span class="wizualnie-ukryte">Zdjęcie </span><span data-licznik>1 / 6</span></p>
-            <button type="button" class="galeria__przycisk" data-kierunek="-1" aria-label="Poprzednie zdjęcie" aria-controls="galeria-okno">Poprzednie</button>
-            <button type="button" class="galeria__przycisk" data-kierunek="1" aria-label="Następne zdjęcie" aria-controls="galeria-okno">Następne</button>
-          </div>
         </div>
-        <!-- Karuzela: przewijanie poziome ze scroll-snap; palcem, przyciskami albo strzałkami, gdy ma fokus. Bez autoodtwarzania. -->
-        <div class="galeria__okno" id="galeria-okno" tabindex="0" role="region" aria-label="Zdjęcia, przewijane w poziomie. Strzałki w lewo i w prawo zmieniają zdjęcie.">
+        <!-- Karuzela: przesuwanie na boki (palec, gładzik, przeciąganie myszą) albo strzałki na krawędziach;
+             z klawiatury strzałki w lewo/prawo, gdy galeria ma fokus. Bez zapętlania i bez autoodtwarzania. -->
+        <div class="galeria__scena">
+          <button type="button" class="galeria__strzalka galeria__strzalka--lewa" data-kierunek="-1" aria-label="Poprzednie zdjęcie" aria-controls="galeria-okno"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#strzalka-lewa"></use></svg></button>
+          <button type="button" class="galeria__strzalka galeria__strzalka--prawa" data-kierunek="1" aria-label="Następne zdjęcie" aria-controls="galeria-okno"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#strzalka-prawa"></use></svg></button>
+        <div class="galeria__okno" id="galeria-okno" tabindex="0" role="region" aria-label="Zdjęcia, przesuwane w poziomie. Strzałki w lewo i w prawo zmieniają zdjęcie.">
           <ul class="galeria__tor">
             <li>
               <figure>
@@ -234,11 +233,11 @@
             </li>
           </ul>
         </div>
+        </div>
       </div>
 
-      <!-- CTA pod galerią: liczba z data.js (main.js) -->
+      <!-- CTA pod galerią: w tej samej pozycji co „Zapytaj o lokal” pod planszami Standardu -->
       <div class="wrap cta-wiersz">
-        <p class="cta-wiersz__tekst" data-dostepnosc>Dostępne 2 z 4 lokali.</p>
         <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
       </div>
     </section>
@@ -284,7 +283,6 @@
       <div class="wrap">
         <div class="sekcja__naglowek">
           <h2 id="lokale-tytul">Lokale i ceny</h2>
-          <p>Ceny są jawne. Nie musisz wypełniać formularza, żeby je zobaczyć.</p>
         </div>
 
         <div class="lokale__uklad">
@@ -316,7 +314,7 @@
         </div>
 
         <div class="dostepnosc">
-          <p class="dostepnosc__liczba" id="dostepnosc">Dostępne 2 z 4</p>
+          <p class="dostepnosc__liczba" id="dostepnosc">Dostępne 4 z 4</p>
         </div>
 
         <div class="tabela-przewijana" tabindex="0" role="region" aria-labelledby="cennik-podpis">
@@ -345,7 +343,7 @@
         <noscript><p>Cennik wymaga włączonego JavaScriptu.</p></noscript>
 
         <div class="koszty">
-          <h3>Dodatkowe koszty</h3>
+          <h3>Dodatkowe informacje</h3>
           <p data-koszty>Cena obejmuje lokal i 2 miejsca postojowe. Koszty notarialne i opłaty sądowe ponosi kupujący.</p>
         </div>
       </div>
@@ -408,7 +406,7 @@
                 <button type="button" class="filtr" data-kategoria="szkoly" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#szkoly"></use></svg>Szkoły</button>
                 <button type="button" class="filtr" data-kategoria="sklepy" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#sklepy"></use></svg>Sklepy</button>
                 <button type="button" class="filtr" data-kategoria="komunikacja" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#komunikacja"></use></svg>Komunikacja</button>
-                <button type="button" class="filtr" data-kategoria="zielen" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zielen"></use></svg>Zieleń</button>
+                <button type="button" class="filtr" data-kategoria="zielen" aria-pressed="true"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zielen"></use></svg>Rekreacja</button>
               </div>
             </fieldset>
             <div class="dojazdy">
@@ -423,7 +421,7 @@
     <!-- Pas CTA między Lokalizacją a dalszą częścią strony (ciemny, pionowe prążkowanie) -->
     <section class="ciemna pas-cta" aria-label="Zapytaj o lokal">
       <div class="wrap pas-cta__wnetrze">
-        <p class="pas-cta__tekst"><span data-dostepnosc>Dostępne 2 z 4 lokali.</span> Odpowiemy na pytania o ceny, termin i standard.</p>
+        <p class="pas-cta__tekst">Masz więcej pytań? Skontaktuj się z naszym doradcą.</p>
         <div class="pas-cta__akcje">
           <a class="btn btn--jasny" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
           <a class="pas-cta__tel" href="tel:+48690888849" data-telefon="pelny">Zadzwoń: +48 690 888 849</a>
@@ -476,22 +474,22 @@
             </picture>
           </figure>
           <div class="kontakt__dane">
+            <div class="opiekun-placeholder" role="img" aria-label="Miejsce na zdjęcie opiekuna klienta">
+              <span class="placeholder">[DO UZUPEŁNIENIA: zdjęcie opiekuna klienta]</span>
+            </div>
             <dl>
               <div><dt>Opiekun</dt><dd data-kontakt="osoba">Marta Nowak</dd></div>
               <div><dt>Telefon</dt><dd data-kontakt="telefon"><a href="tel:+48690888849">+48 690 888 849</a></dd></div>
               <div><dt>E-mail</dt><dd data-kontakt="email"><a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a></dd></div>
             </dl>
-            <div class="opiekun-placeholder" role="img" aria-label="Miejsce na zdjęcie opiekuna klienta">
-              <span class="placeholder">[DO UZUPEŁNIENIA: zdjęcie opiekuna klienta]</span>
-            </div>
           </div>
         </div>
 
         <div>
           <h2 id="kontakt-naglowek" tabindex="-1">Zapytaj o lokal</h2>
-          <p class="kontakt__intro">Zostaw dane, a opiekun klienta oddzwoni albo odpisze.</p>
+          <p class="kontakt__intro">Zostaw dane, a opiekun klienta zadzwoni albo skontaktuje się mailowo.</p>
 
-          <form id="formularz-kontakt" action="/api/kontakt" method="post" novalidate>
+          <form id="formularz-kontakt" action="/api/kontakt" method="post" novalidate autocomplete="on">
             <div class="pole">
               <input type="text" id="k-imie" name="imie" placeholder=" " autocomplete="given-name" required aria-describedby="k-imie-blad">
               <label for="k-imie">Imię</label>
@@ -507,11 +505,6 @@
               <label for="k-email">E-mail</label>
               <span class="blad" id="k-email-blad" hidden></span>
             </div>
-            <div class="pole">
-              <textarea id="k-wiadomosc" name="wiadomosc" placeholder=" " rows="4"></textarea>
-              <label for="k-wiadomosc">Wiadomość (opcjonalnie)</label>
-            </div>
-
             <fieldset class="grupa" id="k-forma-grupa" aria-describedby="k-forma-blad">
               <legend>Preferowana forma kontaktu</legend>
               <div class="wybory">
@@ -520,31 +513,29 @@
               </div>
               <span class="blad" id="k-forma-blad" hidden></span>
             </fieldset>
+            <div class="pole">
+              <textarea id="k-wiadomosc" name="wiadomosc" placeholder=" " rows="2"></textarea>
+              <label for="k-wiadomosc">Wiadomość (opcjonalnie)</label>
+            </div>
+
 
             <fieldset class="grupa">
-              <legend>Zgody</legend>
+              <legend class="wizualnie-ukryte">Zgody</legend>
               <div class="zgoda zgoda--wszystkie">
-                <input type="checkbox" id="k-zgody-wszystkie">
+                <input type="checkbox" id="k-zgody-wszystkie" autocomplete="off">
                 <label for="k-zgody-wszystkie">Zaznacz wszystkie</label>
               </div>
               <div class="zgoda">
-                <input type="checkbox" id="k-zgoda-email" name="zgoda_email" value="tak" data-zgoda aria-describedby="k-zgoda-email-blad">
+                <input type="checkbox" id="k-zgoda-kontakt" name="zgoda_kontakt" value="tak" data-zgoda required autocomplete="off" aria-describedby="k-zgoda-kontakt-blad">
                 <div>
-                  <label for="k-zgoda-email">Zgadzam się na kontakt e-mailowy w sprawie mojego zapytania.</label>
-                  <span class="blad" id="k-zgoda-email-blad" hidden></span>
+                  <label for="k-zgoda-kontakt">Zgadzam się na kontakt telefoniczny lub e-mailowy w sprawie mojego zapytania<span class="wymagane" aria-hidden="true">*</span><span class="wizualnie-ukryte"> (wymagane)</span>.</label>
+                  <span class="blad" id="k-zgoda-kontakt-blad" hidden></span>
                 </div>
               </div>
               <div class="zgoda">
-                <input type="checkbox" id="k-zgoda-telefon" name="zgoda_telefon" value="tak" data-zgoda aria-describedby="k-zgoda-telefon-blad">
+                <input type="checkbox" id="k-zgoda-polityka" name="zgoda_polityka" value="tak" data-zgoda required autocomplete="off" aria-describedby="k-zgoda-polityka-blad">
                 <div>
-                  <label for="k-zgoda-telefon">Zgadzam się na kontakt telefoniczny w sprawie mojego zapytania.</label>
-                  <span class="blad" id="k-zgoda-telefon-blad" hidden></span>
-                </div>
-              </div>
-              <div class="zgoda">
-                <input type="checkbox" id="k-zgoda-polityka" name="zgoda_polityka" value="tak" data-zgoda required aria-describedby="k-zgoda-polityka-blad">
-                <div>
-                  <label for="k-zgoda-polityka">Akceptuję <a href="polityka-prywatnosci.html">politykę prywatności</a>.</label>
+                  <label for="k-zgoda-polityka">Akceptuję <a href="polityka-prywatnosci.html">politykę prywatności</a><span class="wymagane" aria-hidden="true">*</span><span class="wizualnie-ukryte"> (wymagane)</span>.</label>
                   <span class="blad" id="k-zgoda-polityka-blad" hidden></span>
                 </div>
               </div>
@@ -553,11 +544,11 @@
                 <!-- Treść POGLĄDOWA, do weryfikacji przez prawnika -->
                 <p>Administratorem Twoich danych osobowych jest Sanit Investments, ul. Żerzeńska 31, Warszawa. Dane z formularza (imię, telefon, e-mail, treść wiadomości) przetwarzamy, żeby odpowiedzieć na zapytanie i skontaktować się z Tobą w wybrany sposób (art. 6 ust. 1 lit. a i b RODO). Podanie danych jest dobrowolne, ale bez nich nie odpowiemy na zapytanie.</p>
                 <p>Dane przechowujemy do zakończenia rozmów o zakupie lokalu, a potem przez okres przedawnienia ewentualnych roszczeń. Odbiorcami danych mogą być firmy, które świadczą nam usługi hostingu i poczty elektronicznej. Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania i przeniesienia, a także prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</p>
-                <p>Zgody na kontakt e-mailowy i telefoniczny możesz wycofać w każdej chwili, pisząc na <a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a>. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed jej wycofaniem. Więcej w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
+                <p>Zgodę na kontakt telefoniczny lub e-mailowy możesz wycofać w każdej chwili, pisząc na <a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a>. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed jej wycofaniem. Więcej w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
               </details>
             </fieldset>
 
-            <button class="btn" type="submit" id="k-wyslij">Wyślij zapytanie</button>
+            <button class="btn kontakt__wyslij" type="submit" id="k-wyslij">Wyślij zapytanie</button>
           </form>
 
           <div class="sukces" id="kontakt-sukces" hidden tabindex="-1">

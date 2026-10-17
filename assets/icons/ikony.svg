@@ -64,4 +64,10 @@
     <path d="M18 6l-12 12" vector-effect="non-scaling-stroke"/>
     <path d="M6 6l12 12" vector-effect="non-scaling-stroke"/>
   </symbol>
+  <symbol id="strzalka-lewa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">  <!-- tabler/chevron-left.svg -->
+    <path d="M15 6l-6 6l6 6" vector-effect="non-scaling-stroke"/>
+  </symbol>
+  <symbol id="strzalka-prawa" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">  <!-- tabler/chevron-right.svg -->
+    <path d="M9 6l6 6l-6 6" vector-effect="non-scaling-stroke"/>
+  </symbol>
 </svg>

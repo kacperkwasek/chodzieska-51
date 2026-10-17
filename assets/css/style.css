@@ -463,8 +463,10 @@ button { cursor: pointer; }
     padding-top: 0;
   }
   .hero__tekst {
-    padding: calc(var(--nav-h) + 48px) clamp(32px, 5vw, 88px) 64px var(--gutter);
+    /* lewy odstęp = początek pierwszego linku w nawigacji („O inwestycji”); main.js ustawia --hero-wciecie */
+    padding: calc(var(--nav-h) + 48px) clamp(24px, 4vw, 88px) 64px var(--hero-wciecie, var(--gutter));
   }
+  .hero h1 { white-space: nowrap; } /* nazwa zawsze w jednej linii, także po przesunięciu tekstu w prawo */
   .hero__zdjecie { order: 0; aspect-ratio: auto; min-height: 100%; }
 }
 
@@ -530,25 +532,27 @@ button { cursor: pointer; }
 .galeria__tytul { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 24px; }
 .galeria__tytul h3 { font-size: var(--fs-h5); }
 .galeria__tytul p { margin: 0; }
-.galeria__sterowanie { display: flex; align-items: center; gap: 8px; }
-.galeria__licznik {
-  margin: 0 8px 0 0;
-  min-width: 4ch;
-  font-weight: var(--fw-sredni);
-  font-variant-numeric: tabular-nums;
-}
-.galeria__przycisk {
-  min-height: 44px;
-  padding: 8px 16px;
-  background: transparent;
-  border: 1.5px solid var(--balustrada);
+/* Strzałki na krawędziach galerii: subtelne, bez zapętlania (na końcach znikają) */
+.galeria__scena { position: relative; }
+.galeria__strzalka {
+  position: absolute; z-index: 2;
+  top: calc(var(--g-h) / 2);
+  transform: translateY(-50%);
+  display: grid; place-items: center;
+  width: 44px; height: 44px; padding: 0;
+  border: 0;
+  background: rgba(245, 242, 235, .55); /* --tynk, półprzezroczysty */
   color: var(--balustrada);
-  font-size: 15px;
-  font-weight: var(--fw-sredni);
-  transition: background-color .2s var(--ease);
+  cursor: pointer;
+  transition: background-color .2s var(--ease), opacity .2s var(--ease);
 }
-.galeria__przycisk:hover:not(:disabled) { background: var(--balustrada); color: var(--tynk); }
-.galeria__przycisk:disabled { color: var(--tabliczka); border-color: var(--tabliczka); border-style: dashed; cursor: default; }
+.galeria__strzalka .ikona { width: 24px; height: 24px; }
+.galeria__strzalka:hover { background: rgba(245, 242, 235, .9); }
+.galeria__strzalka:focus-visible { outline: 2px solid var(--balustrada); outline-offset: 2px; }
+.galeria__strzalka:disabled { opacity: 0; pointer-events: none; }
+/* Przy lewej i prawej krawędzi całego panelu galerii (okna przeglądarki) */
+.galeria__strzalka--lewa { left: 12px; }
+.galeria__strzalka--prawa { right: 12px; }
 
 .galeria__okno {
   position: relative;          /* offsetLeft zdjęć liczony względem okna */
@@ -557,19 +561,20 @@ button { cursor: pointer; }
   scroll-snap-type: x mandatory;
   scroll-padding-inline: var(--gutter);
   overscroll-behavior-x: contain; /* tylko oś pozioma: pionowe przewijanie strony przechodzi dalej */
-  scrollbar-width: thin;
-  scrollbar-color: var(--tabliczka) transparent;
+  scrollbar-width: none;      /* bez paska przewijania */
 }
+.galeria__okno::-webkit-scrollbar { display: none; }
 .galeria__okno:focus-visible { outline-offset: -3px; }
 @media (pointer: fine) {
   .galeria__okno { cursor: grab; }
 }
-.galeria__okno.is-przeciagana { cursor: grabbing; scroll-snap-type: none; user-select: none; }
+.galeria__okno.bez-snap { scroll-snap-type: none; } /* na czas przeciągania i przesuwu z JS; włączane na miejscu */
+.galeria__okno.is-przeciagana { cursor: grabbing; user-select: none; }
 .galeria__okno img { -webkit-user-drag: none; }
 .galeria__tor {
   list-style: none;
   margin: 0;
-  padding: 0 var(--gutter) 16px;
+  padding: 0 var(--gutter);
   display: flex;
   gap: var(--g-gap);
   width: max-content;
@@ -808,7 +813,7 @@ button { cursor: pointer; }
 .ikona { display: block; flex: none; }
 
 /* Pinezka adresu: Tabler map-pin (wypełniona), kolor --okladzina, jasny obrys dla czytelności na mapie */
-.pinezka { color: var(--okladzina); }
+.pinezka { color: var(--okladzina-ciemna); } /* ciemniejszy brąz niż ikony punktów, żeby inwestycja się wyróżniała */
 .pinezka .ikona { width: 44px; height: 44px; stroke: var(--tynk); stroke-width: 1px; paint-order: stroke; }
 /* Punkty POI: ikona kategorii (Tabler) na jasnym kwadracie */
 .poi {
@@ -925,6 +930,7 @@ button { cursor: pointer; }
 .zgoda input:indeterminate { background: var(--balustrada); border-color: var(--balustrada); }
 .zgoda input:indeterminate::before { width: 10px; height: 0; border-left: 0; transform: none; }
 .zgoda input[aria-invalid="true"] { border: 2px solid var(--okladzina); }
+.wymagane { margin-left: 2px; color: var(--okladzina); font-weight: var(--fw-sredni); }
 .zgoda--wszystkie { font-weight: var(--fw-sredni); padding-bottom: 14px; border-bottom: var(--line); }
 .zgoda .blad { margin-top: 2px; }
 
@@ -941,7 +947,7 @@ button { cursor: pointer; }
    -------------------------------------------------------------------------- */
 .kolejne__uklad { display: grid; gap: 32px; }
 @media (min-width: 900px) {
-  .kolejne__uklad { grid-template-columns: 1fr 1fr; gap: 64px; align-items: end; }
+  .kolejne__uklad { grid-template-columns: 1fr 1fr; gap: 64px; align-items: center; } /* tekst na środku wysokości formularza */
 }
 .kolejne h2 { font-size: var(--fs-h3); margin-bottom: 16px; }
 .kolejne form { max-width: 520px; }
@@ -956,10 +962,11 @@ button { cursor: pointer; }
 .kontakt__zdjecie { margin: 0 0 32px; }
 .kontakt__zdjecie img { width: 100%; aspect-ratio: 1157 / 800; object-fit: cover; }
 .kontakt__dane { display: grid; grid-template-columns: 1fr; gap: 24px; align-items: start; }
-@media (min-width: 560px) { .kontakt__dane { grid-template-columns: 1fr 160px; } }
-.kontakt__dane dl { margin: 0; border-top: var(--line); }
-.kontakt__dane dl div { display: grid; grid-template-columns: 110px 1fr; gap: 12px; padding: 10px 0; border-bottom: var(--line); }
-.kontakt__dane dt { color: var(--tabliczka); }
+@media (min-width: 560px) { .kontakt__dane { grid-template-columns: 160px 1fr; gap: 16px; } } /* najpierw zdjęcie opiekuna, tuż obok dane */
+.kontakt__dane dl { margin: 0; border-top: var(--line); display: grid; grid-template-columns: max-content 1fr; }
+.kontakt__dane dl div { display: contents; } /* etykiety w jednej kolumnie szerokiej na najdłuższą, wartości tuż obok */
+.kontakt__dane dt, .kontakt__dane dd { padding: 10px 0; border-bottom: var(--line); }
+.kontakt__dane dt { color: var(--tabliczka); padding-right: 16px; }
 .kontakt__dane dd { margin: 0; }
 .opiekun-placeholder {
   max-width: 160px;
@@ -972,7 +979,41 @@ button { cursor: pointer; }
   line-height: 1.4;
 }
 .kontakt h2 { font-size: var(--fs-h3); margin-bottom: 12px; }
-.kontakt__intro { margin-bottom: 32px; }
+.kontakt__intro { margin-bottom: 20px; }
+
+/* Zwarty formularz: po przejeździe do sekcji cały formularz z przyciskiem „Wyślij zapytanie”
+   mieści się na ekranie (od ok. 880 px wysokości okna). */
+#formularz-kontakt .pole { margin-bottom: 12px; }
+#formularz-kontakt .pole textarea { min-height: 62px; }
+#formularz-kontakt .grupa { margin-bottom: 18px; }
+#formularz-kontakt .grupa legend { margin-bottom: 8px; }
+#formularz-kontakt .zgoda { margin-bottom: 8px; font-size: 15px; line-height: 1.45; }
+#formularz-kontakt .zgoda--wszystkie { padding-bottom: 8px; }
+#formularz-kontakt .klauzule { margin: 0 0 18px; }
+#formularz-kontakt > fieldset:not(#k-forma-grupa) { margin-top: 8px; }
+.kontakt__wyslij { justify-self: start; }
+@media (min-width: 700px) {
+  /* imię | telefon; e-mail, pod nim forma kontaktu, wiadomość, zgody i przycisk na całą szerokość */
+  #formularz-kontakt { display: grid; grid-template-columns: 1fr 1fr; column-gap: 32px; align-items: start; }
+  #formularz-kontakt > .pole:has(#k-email),
+  #formularz-kontakt > #k-forma-grupa,
+  #formularz-kontakt > .pole:has(textarea),
+  #formularz-kontakt > fieldset:not(#k-forma-grupa),
+  #formularz-kontakt > .kontakt__wyslij { grid-column: 1 / -1; }
+  /* forma kontaktu w jednym wierszu: etykieta, a obok przyciski Telefon / E-mail */
+  #k-forma-grupa legend { float: left; margin: 0 16px 0 0; line-height: 48px; }
+  #k-forma-grupa .blad { clear: both; }
+}
+@media (min-width: 1000px) {
+  .sekcja.kontakt { padding-top: 28px; }
+}
+@media (min-width: 1000px) and (max-height: 820px) {
+  /* niskie okna (np. 1366×768): ciaśniej, żeby „Wyślij zapytanie” był widoczny po przejeździe do sekcji */
+  .sekcja.kontakt { padding-top: 16px; }
+  .kontakt h2 { margin-bottom: 4px; }
+  .kontakt__intro { margin-bottom: 8px; }
+  #formularz-kontakt .pole input { padding-top: 22px; } /* po przejeździe sekcja stoi pod nawigacją: mniej pustego miejsca nad formularzem */
+}
 
 /* --------------------------------------------------------------------------
    Powiększanie zdjęć: przyciski na zdjęciach i podgląd na pełnym ekranie
@@ -1083,9 +1124,8 @@ body.zablokowane { overflow: hidden; } /* przewijanie strony pod oknem zablokowa
    -------------------------------------------------------------------------- */
 .cta-wiersz {
   display: flex; flex-wrap: wrap; align-items: center; gap: 16px 24px;
-  margin-top: 32px;
+  margin-top: 40px; /* jak .standard__cta: przycisk w tej samej pozycji co „Zapytaj o lokal” pod Standardem */
 }
-.cta-wiersz__tekst { margin: 0; font-size: 20px; font-weight: var(--fw-sredni); }
 .standard__cta { margin-top: 40px; }
 
 .pas-cta { padding-block: 56px; }

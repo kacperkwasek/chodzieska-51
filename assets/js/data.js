@@ -105,7 +105,7 @@ window.CH51_DATA = {
       cenaM2: 13500, // POGLĄDOWE
       cenaCalkowita: 1350000, // POGLĄDOWE
       postojKomorka: '2 naziemne, w cenie', // POGLĄDOWE
-      status: 'rezerwacja', // POGLĄDOWE
+      status: 'dostępny', // POGLĄDOWE
       historiaCen: [ // POGLĄDOWE
         { data: '2026-04-01', cenaM2: 12900, cenaCalkowita: 1290000 },
         { data: '2026-09-01', cenaM2: 13500, cenaCalkowita: 1350000 },
@@ -211,7 +211,7 @@ window.CH51_DATA = {
       cenaM2: 13500, // POGLĄDOWE
       cenaCalkowita: 1350000, // POGLĄDOWE
       postojKomorka: '2 naziemne, w cenie', // POGLĄDOWE
-      status: 'sprzedany', // POGLĄDOWE
+      status: 'dostępny', // POGLĄDOWE
       historiaCen: [ // POGLĄDOWE: D bez osobnej historii w uwagach, przyjęta ta sama co A–C
         { data: '2026-04-01', cenaM2: 12900, cenaCalkowita: 1290000 },
         { data: '2026-09-01', cenaM2: 13500, cenaCalkowita: 1350000 },
@@ -337,6 +337,6 @@ window.CH51_DATA = {
     { cel: 'Centrum Warszawy', czas: '25 min' }, // POGLĄDOWE
     { cel: 'Lotnisko Chopina', czas: '17 min' }, // POGLĄDOWE
     { cel: 'Szkoła podstawowa', czas: '3 min' }, // POGLĄDOWE
-    { cel: 'Biedronka', czas: '2 min' }, // POGLĄDOWE
+    { cel: 'Supermarket', czas: '2 min' }, // POGLĄDOWE
   ],
 };
