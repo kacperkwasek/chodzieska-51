@@ -1,6 +1,6 @@
 /* ==========================================================================
    Chodzieska 51 — style
-   Tokeny na początku pliku. Zasady: bez złota, gradientów, cieni i zaokrągleń.
+   Tokeny na początku pliku. Zasady: bez złota (wyjątek: znak logo), gradientów, cieni i zaokrągleń.
    ========================================================================== */
 
 :root {
@@ -15,6 +15,9 @@
   --stopka-tekst: #E4D9CE;    /* tekst w stopce (10,3:1 na balustradzie) */
   --stopka-link: #C09684;     /* linki w stopce (5,41:1 na balustradzie) */
   --prazek: #44332A;
+  --logo-tlo: #1A1A18;        /* tło znaku logo */
+  --logo-zloto: #C8A96E;      /* ramka i „CHO” w znaku logo (7,77:1 na tle znaku) — tylko w logo */
+  --logo-cyfry: #F5F2EB;      /* „51” w znaku logo */
 
   /* Przyciski główne (CTA): ciemne, żeby nie zlewały się z brązową okładziną na renderach */
   --cta: var(--balustrada);         /* tło przycisku głównego, tekst --tynk (12,8:1) */
@@ -22,6 +25,7 @@
 
   /* Font: IBM Plex Sans jako jedyny krój */
   --font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-nazwa: 'Cormorant Garamond', serif;  /* tylko nazwa „Chodzieska 51” w hero */
   --fw-lekki: 300;     /* nagłówki od 43 px, nazwa w hero */
   --fw-tekst: 400;     /* tekst */
   --fw-sredni: 500;    /* mniejsze nagłówki, fakty w hero, przyciski */
@@ -48,7 +52,7 @@
 }
 
 /* --------------------------------------------------------------------------
-   Font (lokalnie, OFL, @fontsource/ibm-plex-sans 5.3.0): IBM Plex Sans 300, 400, 500
+   Fonty (lokalnie, OFL): IBM Plex Sans 300, 400, 500 (@fontsource/ibm-plex-sans 5.3.0); Cormorant Garamond 500 dla nazwy w hero
    -------------------------------------------------------------------------- */
 @font-face {
   font-family: 'IBM Plex Sans';
@@ -96,6 +100,24 @@
   font-weight: 500;
   font-display: swap;
   src: url(../fonts/ibm-plex-sans-latin-500-normal.woff2) format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Cormorant Garamond 500 (lokalnie, OFL, @fontsource/cormorant-garamond 5.3.0) — tylko nazwa w hero */
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(../fonts/cormorant-garamond-latin-ext-500-normal.woff2) format('woff2');
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cormorant Garamond';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url(../fonts/cormorant-garamond-latin-500-normal.woff2) format('woff2');
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
@@ -296,6 +318,10 @@ button { cursor: pointer; }
   padding-inline: var(--gutter);
 }
 .nav__logo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
   font-size: 22px;
   font-weight: var(--fw-sredni);
   letter-spacing: -0.01em;
@@ -303,6 +329,51 @@ button { cursor: pointer; }
   color: var(--balustrada);
   text-decoration: none;
   white-space: nowrap;
+}
+/* Znak logo: ciemny kwadrat, złota ramka, cienka ramka wewnętrzna, „CHO” nad „51” */
+.logo-znak {
+  position: relative;
+  flex-shrink: 0;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  background: var(--logo-tlo);
+  border: 2px solid var(--logo-zloto);
+}
+.logo-znak::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgba(200, 169, 110, .4);
+}
+.logo-znak__cho {
+  font-size: 8px;
+  font-weight: var(--fw-sredni);
+  letter-spacing: .35em;
+  margin-right: -.35em;   /* odstęp za ostatnią literą psułby wyśrodkowanie */
+  color: var(--logo-zloto);
+}
+.logo-znak__nr {
+  font-size: 21px;
+  font-weight: var(--fw-sredni);
+  letter-spacing: -0.02em;
+  color: var(--logo-cyfry);
+}
+/* Sam znak (nazwa tylko dla czytników): poniżej 900 px przyciski nawigacji nie mieszczą się obok nazwy,
+   a przy 1280–1439 px linki weszłyby na zdjęcie hero */
+@media (max-width: 899px), (min-width: 1280px) and (max-width: 1439px) {
+  .nav__nazwa {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
 }
 .nav__logo:hover { color: var(--balustrada); }
 
@@ -385,6 +456,10 @@ button { cursor: pointer; }
 @media (min-width: 560px) {
   .nav__akcje .btn { display: inline-flex; }
 }
+/* Poniżej 768 px „Zadzwoń: +48 …” nie mieści się obok „Zapytaj o lokal” i „Menu” (jest w panelu menu) */
+@media (max-width: 767px) {
+  .nav__akcje .nav__telefon { display: none; }
+}
 
 /* Desktop: przezroczysta nad hero, linki nad jasną kolumną */
 @media (min-width: 900px) {
@@ -429,7 +504,10 @@ button { cursor: pointer; }
   justify-content: center;
 }
 .hero h1 {
+  font-family: var(--font-nazwa);
+  font-weight: 500;
   font-size: var(--fs-hero);
+  letter-spacing: -0.01em;
   margin-bottom: 24px;
 }
 .hero__lead {
@@ -471,28 +549,31 @@ button { cursor: pointer; }
 }
 
 /* --------------------------------------------------------------------------
-   2. Inwestycja: pierwszy rząd (tekst + render 7), pod nim galeria
+   2. Inwestycja: pierwszy rząd (zdanie i opis na całą szerokość),
+      drugi rząd (render 7 z lewej, kluczowe powody z prawej), pod nimi galeria
    -------------------------------------------------------------------------- */
-.inwestycja__rzad { display: grid; gap: 32px; }
-@media (min-width: 900px) {
-  .inwestycja__rzad { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: clamp(40px, 5vw, 72px); align-items: start; }
-}
 .intro__zdanie {
   font-size: var(--fs-h2);
   margin-bottom: 28px;
 }
-.intro__opis { font-size: 20px; }
-.inwestycja__zdjecie { margin: 0; }
-/* Zdjęcie zaczyna się na wysokości górnej krawędzi liter zdania (połowa interlinii + odstęp nad wersalikami) */
+/* Opis: trzy akapity na całą szerokość kontenera (prośba klienta, bez limitu 70 znaków) */
+.intro__opis p { max-width: none; }
+.intro__opis p:last-child { margin-bottom: 0; }
+.inwestycja__rzad { display: grid; gap: 32px; margin-top: clamp(40px, 4vw, 56px); }
 @media (min-width: 900px) {
-  .inwestycja__zdjecie { margin-top: calc(var(--fs-h2) * 0.22); }
-  /* wariant ?intro=fakty zaczyna się linią, więc zdjęcie bez przesunięcia */
-  .inwestycja__rzad:has(.intro__fakty:not([hidden])) .inwestycja__zdjecie { margin-top: 0; }
+  .inwestycja__rzad { grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr); gap: clamp(40px, 5vw, 72px); align-items: center; }
 }
+.intro__powody { margin: 0 0 1em; padding-left: 1.2em; max-width: var(--measure); }
+.intro__powody li + li { margin-top: 10px; }
+.intro__wstep-listy,
+.intro__haslo { font-weight: var(--fw-sredni); }
+.intro__wstep-listy { margin-bottom: .75em; }
+.intro__haslo { margin-bottom: 0; }
+.inwestycja__zdjecie { margin: 0; }
 .inwestycja__zdjecie img { width: 100%; }
 .inwestycja__zdjecie figcaption { margin-top: 12px; }
 
-/* Wariant ?intro=fakty: pasek faktów zamiast zdania, 2×2 w lewej kolumnie */
+/* Wariant ?intro=fakty: pasek faktów zamiast zdania, 2×2 (od 900 px cztery w rzędzie) */
 .intro__fakty {
   list-style: none;
   margin: 0 0 28px;
@@ -511,6 +592,11 @@ button { cursor: pointer; }
   font-size: var(--fs-h2);
 }
 .intro__fakty .opis { color: var(--tabliczka); }
+@media (min-width: 900px) {
+  .intro__fakty { grid-template-columns: repeat(4, 1fr); }
+  .intro__fakty li:nth-child(n) { padding: 20px; border-left: var(--line); }
+  .intro__fakty li:first-child { padding-left: 0; border-left: 0; }
+}
 
 /* --------------------------------------------------------------------------
    Galeria: karuzela (scroll-snap), bez przechwytywania przewijania strony
@@ -1205,7 +1291,6 @@ body.zablokowane { overflow: hidden; } /* przewijanie strony pod oknem zablokowa
     --fs-h5: 21px;
     --nav-h: 64px;
   }
-  .intro__opis { font-size: var(--fs-body); }
   .nav__logo { font-size: 24px; }
 }
 

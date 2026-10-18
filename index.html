@@ -40,7 +40,7 @@
   <header class="nav" id="nav">
     <div class="nav__wnetrze">
       <!-- Logo tymczasowe: napis krojem IBM Plex Sans 500 -->
-      <a class="nav__logo" href="#gora" aria-label="Chodzieska 51, początek strony">Chodzieska 51</a>
+      <a class="nav__logo" href="#gora" aria-label="Chodzieska 51, początek strony"><span class="logo-znak" aria-hidden="true"><span class="logo-znak__cho">CHO</span><span class="logo-znak__nr">51</span></span><span class="nav__nazwa">Chodzieska 51</span></a>
       <nav aria-label="Główna">
         <ul class="nav__linki">
           <li><a href="#inwestycja">O inwestycji</a></li>
@@ -111,19 +111,25 @@
     <section class="sekcja inwestycja" id="inwestycja" aria-labelledby="inwestycja-tytul">
       <div class="wrap">
         <h2 id="inwestycja-tytul" class="wizualnie-ukryte">Inwestycja</h2>
-        <div class="inwestycja__rzad">
-          <div class="inwestycja__tekst">
-            <!-- Wariant domyślny: jedno duże zdanie -->
-            <p class="intro__zdanie" data-wariant="zdanie">Dwa budynki. Cztery lokale po 100&nbsp;m². Jedna brama.</p>
-            <!-- Wariant alternatywny (?intro=fakty): statyczny pasek faktów zamiast zdania -->
-            <ul class="intro__fakty" data-wariant="fakty" hidden>
-              <li><span class="liczba">2</span><span class="opis">budynki</span></li>
-              <li><span class="liczba">4</span><span class="opis">lokale</span></li>
-              <li><span class="liczba">100&nbsp;m²</span><span class="opis">każdy lokal</span></li>
-              <li><span class="liczba">3</span><span class="opis">poziomy w każdym lokalu</span></li>
-            </ul>
-            <p class="intro__opis">Chodzieska 51 to kameralna inwestycja: dwa budynki za wspólną bramą, w każdym po dwa lokale. Wokół budynków i wzdłuż wejść zaplanowano trawniki, krzewy i drzewa. Każdy lokal ma trzy poziomy, więc część dzienną i sypialnie możesz rozdzielić piętrami.</p>
+        <!-- Pierwszy rząd: zdanie i opis na całą szerokość -->
+        <div class="inwestycja__intro">
+          <!-- Wariant domyślny: jedno duże zdanie -->
+          <p class="intro__zdanie" data-wariant="zdanie">Dwa budynki. Cztery lokale po 100&nbsp;m². Jedna brama.</p>
+          <!-- Wariant alternatywny (?intro=fakty): statyczny pasek faktów zamiast zdania -->
+          <ul class="intro__fakty" data-wariant="fakty" hidden>
+            <li><span class="liczba">2</span><span class="opis">budynki</span></li>
+            <li><span class="liczba">4</span><span class="opis">lokale</span></li>
+            <li><span class="liczba">100&nbsp;m²</span><span class="opis">każdy lokal</span></li>
+            <li><span class="liczba">3</span><span class="opis">poziomy w każdym lokalu</span></li>
+          </ul>
+          <div class="intro__opis">
+            <p>Odkryj wyjątkowe miejsce do życia w&nbsp;sercu warszawskiego Wawra. Inwestycja przy ul.&nbsp;Chodzieskiej 51 to kameralne osiedle, gdzie nowoczesna architektura harmonijnie łączy się z&nbsp;bliskością natury, oferując wytchnienie od wielkomiejskiego zgiełku.</p>
+            <p>Projekt obejmuje zaledwie dwa budynki, w&nbsp;których powstaną łącznie cztery przestronne lokale. Każdy z&nbsp;nich ma powierzchnię 100&nbsp;m², co stwarza idealne warunki do stworzenia wygodnego, dopasowanego do indywidualnych potrzeb domu – w&nbsp;szczególności dla rodzin z&nbsp;dziećmi. Niewielka skala zabudowy to gwarancja prywatności, spokoju i&nbsp;świetna alternatywa dla dużych, zatłoczonych osiedli.</p>
+            <p>Sama architektura inwestycji wyróżnia się współczesną elegancją, jasnymi elewacjami i&nbsp;przestronnymi balkonami, które idealnie wpisują się w&nbsp;ciche, zielone otoczenie. To miejsce stworzone po to, by po intensywnym dniu móc odpocząć w&nbsp;przyjaznym, naturalnym środowisku.</p>
           </div>
+        </div>
+        <!-- Drugi rząd: render 7 z lewej, kluczowe powody z prawej -->
+        <div class="inwestycja__rzad">
           <figure class="inwestycja__zdjecie">
             <button type="button" class="powieksz" data-podglad aria-label="Powiększ zdjęcie: Wejścia do lokali C i D, przed nimi schody i nasadzenia">
               <picture>
@@ -135,6 +141,16 @@
             </button>
             <figcaption class="drobny">Wejścia do lokali C i D, przed nimi schody i nasadzenia</figcaption>
           </figure>
+          <div class="inwestycja__powody">
+            <p class="intro__wstep-listy">Kluczowe powody, dla których warto wybrać tę inwestycję:</p>
+            <ul class="intro__powody">
+              <li><strong>Wyjątkowa kameralność</strong> – zaledwie 4 lokale w&nbsp;2 budynkach, gwarantujące brak tłoku i&nbsp;hałasu.</li>
+              <li><strong>Komfortowa przestrzeń</strong> – po 100&nbsp;m² powierzchni na każdy apartament.</li>
+              <li><strong>Nowoczesny design</strong> – elegancka, ponadczasowa bryła wkomponowana w&nbsp;krajobraz.</li>
+              <li><strong>Natura i&nbsp;spokój</strong> – cicha część Wawra, pozwalająca na codzienny relaks i&nbsp;oddech od miasta.</li>
+            </ul>
+            <p class="intro__haslo">Chodzieska 51 – Twój spokój. Twoja przestrzeń. Twój dom.</p>
+          </div>
         </div>
       </div>
 
