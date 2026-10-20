@@ -1,6 +1,6 @@
 /* ==========================================================================
    Chodzieska 51 — style
-   Tokeny na początku pliku. Zasady: bez złota (wyjątek: znak logo), gradientów, cieni i zaokrągleń.
+   Tokeny na początku pliku. Zasady: bez złota, gradientów, cieni i zaokrągleń.
    ========================================================================== */
 
 :root {
@@ -14,21 +14,17 @@
   --tabliczka: #665846;       /* ikony, drobne podpisy, granice pól (6,16:1 na tynku) */
   --stopka-tekst: #E4D9CE;    /* tekst w stopce (10,3:1 na balustradzie) */
   --stopka-link: #C09684;     /* linki w stopce (5,41:1 na balustradzie) */
-  --prazek: #44332A;
-  --logo-tlo: #1A1A18;        /* tło znaku logo */
-  --logo-zloto: #C8A96E;      /* ramka i „CHO” w znaku logo (7,77:1 na tle znaku) — tylko w logo */
-  --logo-cyfry: #F5F2EB;      /* „51” w znaku logo */
+  --prazek: #44332A;          /* pionowe prążki w ciemnych sekcjach (img/prazki.svg) */
 
   /* Przyciski główne (CTA): ciemne, żeby nie zlewały się z brązową okładziną na renderach */
   --cta: var(--balustrada);         /* tło przycisku głównego, tekst --tynk (12,8:1) */
-  --cta-hover: var(--okladzina);    /* tło po najechaniu, tekst --tynk (6,46:1) */          /* pionowe prążki w ciemnych sekcjach (img/prazki.svg) */
+  --cta-hover: var(--okladzina);    /* tło po najechaniu, tekst --tynk (6,46:1) */
 
   /* Font: IBM Plex Sans jako jedyny krój */
   --font: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --font-nazwa: 'Cormorant Garamond', serif;  /* tylko nazwa „Chodzieska 51” w hero */
-  --fw-lekki: 300;     /* nagłówki od 43 px, nazwa w hero */
+  --fw-lekki: 300;     /* nagłówki od 43 px, h1 w hero */
   --fw-tekst: 400;     /* tekst */
-  --fw-sredni: 500;    /* mniejsze nagłówki, fakty w hero, przyciski */
+  --fw-sredni: 500;    /* mniejsze nagłówki, wartości w pasie faktów, przyciski, logo */
 
   /* Skala: tekst 18 px (telefon 17 px), nagłówki co ok. ×1,33 */
   --fs-body: 18px;
@@ -46,13 +42,12 @@
   --gutter: clamp(16px, 4vw, 56px);
   --max: 1440px;
   --nav-h: 72px;
-  --hero-split: 58%;
   --line: 1px solid var(--kostka);
   --ease: cubic-bezier(.2, .7, .2, 1);
 }
 
 /* --------------------------------------------------------------------------
-   Fonty (lokalnie, OFL): IBM Plex Sans 300, 400, 500 (@fontsource/ibm-plex-sans 5.3.0); Cormorant Garamond 500 dla nazwy w hero
+   Fonty (lokalnie, OFL): IBM Plex Sans 300, 400, 500 (@fontsource/ibm-plex-sans 5.3.0) — jedyny krój
    -------------------------------------------------------------------------- */
 @font-face {
   font-family: 'IBM Plex Sans';
@@ -103,24 +98,6 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
-/* Cormorant Garamond 500 (lokalnie, OFL, @fontsource/cormorant-garamond 5.3.0) — tylko nazwa w hero */
-@font-face {
-  font-family: 'Cormorant Garamond';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(../fonts/cormorant-garamond-latin-ext-500-normal.woff2) format('woff2');
-  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
-}
-@font-face {
-  font-family: 'Cormorant Garamond';
-  font-style: normal;
-  font-weight: 500;
-  font-display: swap;
-  src: url(../fonts/cormorant-garamond-latin-500-normal.woff2) format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
-}
-
 /* --------------------------------------------------------------------------
    Podstawy
    -------------------------------------------------------------------------- */
@@ -128,6 +105,7 @@
 [hidden] { display: none !important; }
 
 html {
+  font-family: var(--font); /* także elementy poza body: bez domyślnego kroju szeryfowego przeglądarki */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   scroll-padding-top: calc(var(--nav-h) + 16px);
@@ -157,7 +135,7 @@ h1, h2, h3, h4, h5 {
   margin: 0;
   text-wrap: balance;
 }
-/* Duże nagłówki (od 43 px) i nazwa w hero: 300, -0.02em, interlinia 1,1 */
+/* Duże nagłówki (od 43 px): 300, -0.02em, interlinia 1,1 */
 h1, h2,
 .intro__zdanie,
 .intro__fakty .liczba,
@@ -299,7 +277,7 @@ button { cursor: pointer; }
 .link-poboczny:focus-visible::after { transform: scaleX(1); }
 
 /* --------------------------------------------------------------------------
-   Nawigacja
+   Nawigacja: jeden pasek na tle --tynk, przyklejony do góry; po przewinięciu linia --kostka
    -------------------------------------------------------------------------- */
 .nav {
   position: fixed;
@@ -307,11 +285,14 @@ button { cursor: pointer; }
   z-index: 50;
   height: var(--nav-h);
   background: var(--tynk);
-  border-bottom: 1px solid var(--kostka);
-  transition: background-color .2s linear, border-color .2s linear;
+  border-bottom: 1px solid transparent;
+  transition: border-color .2s linear;
 }
+.nav--linia { border-bottom-color: var(--kostka); } /* main.js po przewinięciu; na stronach pomocniczych zawsze */
 .nav__wnetrze {
   height: 100%;
+  max-width: var(--max);   /* ten sam kontener co .wrap: logo równo z h1 i treścią sekcji */
+  margin-inline: auto;
   display: flex;
   align-items: center;
   gap: 24px;
@@ -330,9 +311,8 @@ button { cursor: pointer; }
   text-decoration: none;
   white-space: nowrap;
 }
-/* Znak logo: ciemny kwadrat, złota ramka, cienka ramka wewnętrzna, „CHO” nad „51” */
+/* Znak logo: kwadrat --balustrada bez obramowania, „CHO” nad „51” w kolorze --tynk */
 .logo-znak {
-  position: relative;
   flex-shrink: 0;
   width: 48px;
   height: 48px;
@@ -341,31 +321,22 @@ button { cursor: pointer; }
   align-items: center;
   justify-content: center;
   gap: 3px;
-  background: var(--logo-tlo);
-  border: 2px solid var(--logo-zloto);
-}
-.logo-znak::before {
-  content: "";
-  position: absolute;
-  inset: 3px;
-  border: 1px solid rgba(200, 169, 110, .4);
+  background: var(--balustrada);
+  color: var(--tynk);
 }
 .logo-znak__cho {
   font-size: 8px;
   font-weight: var(--fw-sredni);
   letter-spacing: .35em;
   margin-right: -.35em;   /* odstęp za ostatnią literą psułby wyśrodkowanie */
-  color: var(--logo-zloto);
 }
 .logo-znak__nr {
   font-size: 21px;
   font-weight: var(--fw-sredni);
   letter-spacing: -0.02em;
-  color: var(--logo-cyfry);
 }
-/* Sam znak (nazwa tylko dla czytników): poniżej 900 px przyciski nawigacji nie mieszczą się obok nazwy,
-   a przy 1280–1439 px linki weszłyby na zdjęcie hero */
-@media (max-width: 899px), (min-width: 1280px) and (max-width: 1439px) {
+/* Sam znak (nazwa tylko dla czytników): na wąskich telefonach przyciski nie mieszczą się obok nazwy */
+@media (max-width: 519px) {
   .nav__nazwa {
     position: absolute;
     width: 1px;
@@ -407,11 +378,8 @@ button { cursor: pointer; }
   align-items: center;
   gap: 8px;
 }
-.nav__telefon { display: none; }
-/* Nad zdjęciem hero: pełne jasne tło (btn--jasny); po przewinięciu, na jasnym pasku: wariant drugorzędny */
-.nav--tlo .nav__telefon.btn--jasny { background: transparent; border-color: var(--balustrada); }
-.nav--tlo .nav__telefon.btn--jasny:hover { background: var(--balustrada); color: var(--tynk); }
-.nav__akcje .btn { display: none; }
+/* W pasku tylko „Zadzwoń” (bez „Zapytaj o lokal”, które powtarzało się z hero): od 768 px z numerem, węziej sam napis */
+.nav__akcje .nav__telefon--krotki { display: none; }
 
 .nav__menu-przycisk {
   display: inline-flex;
@@ -451,101 +419,114 @@ button { cursor: pointer; }
   text-decoration: none;
 }
 .nav__panel-kontakt { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
-.nav__panel-kontakt .nav__telefon { display: inline-flex; }
 
-@media (min-width: 560px) {
-  .nav__akcje .btn { display: inline-flex; }
-}
-/* Poniżej 768 px „Zadzwoń: +48 …” nie mieści się obok „Zapytaj o lokal” i „Menu” (jest w panelu menu) */
 @media (max-width: 767px) {
   .nav__akcje .nav__telefon { display: none; }
+  .nav__akcje .nav__telefon--krotki { display: inline-flex; }
 }
-
-/* Desktop: przezroczysta nad hero, linki nad jasną kolumną */
-@media (min-width: 900px) {
-  .nav:not(.nav--tlo) { background: transparent; border-bottom-color: transparent; }
+@media (max-width: 399px) {
+  .nav__akcje .btn, .nav__menu-przycisk { padding-inline: 12px; } /* przy 320 px „Zadzwoń” i „Menu” mieszczą się obok znaku */
+}
+@media (min-width: 768px) {
+  .nav__panel-kontakt .nav__telefon { display: none; } /* numer jest w pasku */
 }
 @media (min-width: 1280px) {
   .nav__linki { display: flex; }
-  .nav__telefon { display: inline-flex; }
   .nav__menu-przycisk { display: none; }
   .nav__panel { display: none !important; }
   .nav__wnetrze { gap: 32px; }
 }
 
 /* --------------------------------------------------------------------------
-   1. Hero
+   1. Hero (wariant B): rząd tekstu, panorama na całą szerokość, pas faktów
    -------------------------------------------------------------------------- */
 .hero {
-  display: grid;
-  grid-template-columns: 1fr;
-  background: var(--tynk);
+  /* --hero-reszta: zmierzona (Chromium) wysokość nawigacji, rzędu tekstu i pasa faktów, bez panoramy;
+     panorama dostaje resztę pierwszego ekranu, nie więcej niż 42,86vw i nie mniej niż 280 px.
+     Od 1280 px: 72 (nawigacja) + 219 (rząd: 48 + 131 + 40) + 83 (pas faktów) = 374 px.
+     Przy zmianie odstępów, fontu albo treści zmierzyć ponownie. */
+  --hero-reszta: 374px;
   padding-top: var(--nav-h);
+  background: var(--tynk);
 }
-.hero__zdjecie {
-  position: relative;
-  order: -1; /* telefon: zdjęcie nad tekstem */
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  margin: 0;
-}
-.hero__zdjecie img {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 46% 50%;
-}
-.hero__tekst {
-  padding: 40px var(--gutter) 56px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.hero__rzad {
+  display: grid;
+  gap: 24px;
+  padding-top: 40px;
+  padding-bottom: 32px;
 }
 .hero h1 {
-  font-family: var(--font-nazwa);
-  font-weight: 500;
   font-size: var(--fs-hero);
-  letter-spacing: -0.01em;
-  margin-bottom: 24px;
+  font-weight: var(--fw-lekki);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: lining-nums; /* „51” na linii bazowej */
+  overflow-wrap: normal;
 }
 .hero__lead {
-  font-size: var(--fs-h5);
-  line-height: 1.35;
-  max-width: 28ch;
-  margin-bottom: 32px;
+  font-size: 20px;
+  line-height: 1.4;
+  max-width: 36ch;
+  margin-bottom: 24px;
 }
-.hero__fakty {
+.hero__akcje { display: flex; flex-direction: column; gap: 12px; }
+.hero__akcje .btn { width: 100%; }
+
+.hero__panorama {
+  margin: 0;
+  aspect-ratio: 4 / 3; /* telefon: kadr na budynki */
+  overflow: hidden;
+  background: var(--tynk-cien);
+}
+.hero__panorama picture { height: 100%; }
+.hero__panorama img {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 58% 50%;  /* oba budynki w kadrze 4:3 */
+}
+
+.hero__fakty { border-top: var(--line); border-bottom: var(--line); }
+.hero__fakty-lista {
   list-style: none;
-  margin: 0 0 40px;
-  padding: 0;
-  max-width: 560px;
-  border-top: var(--line);
+  margin-block: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 .hero__fakty li {
   display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 12px 0;
-  border-bottom: var(--line);
+  flex-direction: column;
+  gap: 4px;
+  padding: 16px 16px 16px 0;
 }
-.hero__fakty .etykieta { color: var(--tabliczka); }
-.hero__fakty .wartosc { text-align: right; font-weight: var(--fw-sredni); }
-.hero__akcje { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.hero__fakty li:nth-child(even) { padding-left: 16px; border-left: var(--line); }
+.hero__fakty li:nth-child(n+3) { border-top: var(--line); }
+.hero__fakty .etykieta { font-size: 14px; line-height: 1.4; color: var(--tabliczka); }
+.hero__fakty .wartosc { font-size: 20px; line-height: 1.3; font-weight: var(--fw-sredni); color: var(--balustrada); }
 
+@media (min-width: 768px) {
+  .hero__rzad { padding-top: 48px; padding-bottom: 40px; }
+  .hero__lead { font-size: 21px; }
+  .hero__akcje { flex-direction: row; flex-wrap: wrap; }
+  .hero__akcje .btn { width: auto; }
+  .hero__panorama {
+    aspect-ratio: auto;
+    height: max(280px, min(42.86vw, calc(100svh - var(--hero-reszta))));
+  }
+  .hero__panorama img { object-position: 50% 6%; } /* dachy obu budynków w kadrze, przycięty głównie parking */
+  .hero__fakty-lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .hero__fakty li:nth-child(n) { padding: 16px 20px; border-top: 0; border-left: var(--line); }
+  .hero__fakty li:first-child { padding-left: 0; border-left: 0; }
+}
+/* 768–899 px: rząd tekstu jeden pod drugim (291 px), wartości faktów w dwóch wierszach (110 px) */
+@media (min-width: 768px) and (max-width: 899px) { .hero { --hero-reszta: 473px; } }
+/* 900–1279 px: rząd w dwóch kolumnach (219 px), wartości faktów w dwóch wierszach (109 px) */
+@media (min-width: 900px) and (max-width: 1279px) { .hero { --hero-reszta: 400px; } }
 @media (min-width: 900px) {
-  .hero {
-    grid-template-columns: var(--hero-split) 1fr;
-    min-height: max(640px, 100svh);
-    padding-top: 0;
-  }
-  .hero__tekst {
-    /* lewy odstęp = początek pierwszego linku w nawigacji („O inwestycji”); main.js ustawia --hero-wciecie */
-    padding: calc(var(--nav-h) + 48px) clamp(24px, 4vw, 88px) 64px var(--hero-wciecie, var(--gutter));
-  }
-  .hero h1 { white-space: nowrap; } /* nazwa zawsze w jednej linii, także po przesunięciu tekstu w prawo */
-  .hero__zdjecie { order: 0; aspect-ratio: auto; min-height: 100%; }
+  /* h1 z lewej; zdanie i przyciski z prawej, dolną krawędzią równo z h1 */
+  .hero__rzad { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: 48px; }
+  .hero h1 { white-space: nowrap; }
 }
 
 /* --------------------------------------------------------------------------
@@ -1276,7 +1257,6 @@ body.zablokowane { overflow: hidden; } /* przewijanie strony pod oknem zablokowa
 .prosta h1 { font-size: var(--fs-h1); margin-bottom: 24px; }
 .prosta h2 { font-size: var(--fs-h4); margin: 48px 0 12px; }
 .prosta .btn { margin-top: 16px; }
-.strona-prosta .nav { background: var(--tynk); border-bottom-color: var(--kostka); }
 
 /* --------------------------------------------------------------------------
    Telefon: tekst 17 px, nagłówki o stopień mniejsze

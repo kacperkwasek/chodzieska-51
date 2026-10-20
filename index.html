@@ -39,7 +39,7 @@
   <!-- Nawigacja -->
   <header class="nav" id="nav">
     <div class="nav__wnetrze">
-      <!-- Logo tymczasowe: napis krojem IBM Plex Sans 500 -->
+      <!-- Logo tymczasowe: znak „CHO 51” (HTML + CSS) i napis, IBM Plex Sans 500 -->
       <a class="nav__logo" href="#gora" aria-label="Chodzieska 51, początek strony"><span class="logo-znak" aria-hidden="true"><span class="logo-znak__cho">CHO</span><span class="logo-znak__nr">51</span></span><span class="nav__nazwa">Chodzieska 51</span></a>
       <nav aria-label="Główna">
         <ul class="nav__linki">
@@ -52,8 +52,9 @@
         </ul>
       </nav>
       <div class="nav__akcje">
-        <a class="btn btn--jasny nav__telefon" href="tel:+48690888849" data-telefon="pelny">Zadzwoń: +48 690 888 849</a>
-        <a class="btn" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+        <!-- od 768 px pełny numer, węziej samo „Zadzwoń” -->
+        <a class="btn btn--drugi nav__telefon" href="tel:+48690888849" data-telefon="pelny">Zadzwoń: +48 690 888 849</a>
+        <a class="btn btn--drugi nav__telefon nav__telefon--krotki" href="tel:+48690888849" data-telefon="krotki">Zadzwoń</a>
         <button class="nav__menu-przycisk" type="button" aria-expanded="false" aria-controls="menu-panel">
           <svg class="ikona ikona--menu" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#menu"></use></svg><svg class="ikona ikona--zamknij" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zamknij"></use></svg>Menu
         </button>
@@ -79,32 +80,37 @@
 
   <main id="tresc">
 
-    <!-- 1. Hero -->
+    <!-- 1. Hero (wariant B): nagłówek nad panoramą, pod nią pas faktów; żaden tekst nie leży na zdjęciu -->
     <section class="hero" id="gora" aria-labelledby="hero-tytul">
-      <div class="hero__tekst">
+      <div class="wrap hero__rzad">
         <h1 id="hero-tytul">Chodzieska 51</h1>
-        <p class="hero__lead">Cztery trzypoziomowe lokale po 100&nbsp;m² w zielonej części Wawra.</p>
-        <ul class="hero__fakty">
-          <li><span class="etykieta">Lokale</span><span class="wartosc">4</span></li>
-          <li><span class="etykieta">Powierzchnia</span><span class="wartosc">100&nbsp;m² na 3 poziomach</span></li>
-          <li><span class="etykieta">Termin oddania</span><span class="wartosc" data-termin>IV kwartał 2027</span></li>
-          <li><span class="etykieta">Cena od</span><span class="wartosc" data-cena-od>1&nbsp;350&nbsp;000 zł</span></li>
-        </ul>
-        <div class="hero__akcje">
-          <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
-          <a class="btn btn--drugi" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+        <div class="hero__prawa">
+          <p class="hero__lead">Cztery trzypoziomowe lokale po 100&nbsp;m² w zielonej części Wawra.</p>
+          <div class="hero__akcje">
+            <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
+            <a class="btn btn--drugi" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+          </div>
         </div>
       </div>
-      <figure class="hero__zdjecie">
+      <figure class="hero__panorama">
         <picture>
-          <source type="image/webp" sizes="(min-width: 900px) 200vh, 100vw"
-            srcset="assets/img/wizualizacja-3-640.webp 640w, assets/img/wizualizacja-3-1280.webp 1280w, assets/img/wizualizacja-3-1412.webp 1412w">
+          <source type="image/webp" sizes="(max-width: 767px) 162vw, 100vw"
+            srcset="assets/img/wizualizacja-3-640.webp 640w, assets/img/wizualizacja-3-1280.webp 1280w, assets/img/wizualizacja-3-1412.webp 1412w, assets/img/wizualizacja-3-2560.webp 2560w">
           <img src="assets/img/wizualizacja-3-1412.jpg"
-            srcset="assets/img/wizualizacja-3-640.jpg 640w, assets/img/wizualizacja-3-1280.jpg 1280w, assets/img/wizualizacja-3-1412.jpg 1412w"
-            sizes="(min-width: 900px) 200vh, 100vw" width="1412" height="656" fetchpriority="high" decoding="async"
+            srcset="assets/img/wizualizacja-3-640.jpg 640w, assets/img/wizualizacja-3-1280.jpg 1280w, assets/img/wizualizacja-3-1412.jpg 1412w, assets/img/wizualizacja-3-2560.jpg 2560w"
+            sizes="(max-width: 767px) 162vw, 100vw" width="1412" height="656" loading="eager" fetchpriority="high" decoding="async"
             alt="Dwa budynki Chodzieska 51 od strony parkingu: jasny tynk, brązowa okładzina, balkony z lamelami i zieleń wokół">
         </picture>
       </figure>
+      <!-- Pas faktów: wartości wstawia main.js z data.js -->
+      <div class="hero__fakty">
+        <ul class="wrap hero__fakty-lista">
+          <li><span class="etykieta">Lokale</span><span class="wartosc" data-lokale-liczba></span></li>
+          <li><span class="etykieta">Powierzchnia</span><span class="wartosc" data-powierzchnia></span></li>
+          <li><span class="etykieta">Termin oddania</span><span class="wartosc" data-termin></span></li>
+          <li><span class="etykieta">Cena od</span><span class="wartosc" data-cena-od></span></li>
+        </ul>
+      </div>
     </section>
 
     <!-- 2. Inwestycja: tekst z renderem 7, pod spodem galeria -->

@@ -62,6 +62,12 @@
     else n.textContent = v;
   }
 
+  // „100” albo „95–110”, gdy lokale się różnią
+  function zakres(wartosci) {
+    var min = Math.min.apply(null, wartosci), max = Math.max.apply(null, wartosci);
+    return min === max ? String(min) : min + '–' + max;
+  }
+
   function wypelnijDane() {
     var k = D.kontakt;
     $$('[data-kontakt]').forEach(function (n) {
@@ -80,6 +86,10 @@
     });
     if (D.spolka.nazwa) $$('[data-spolka-nazwa]').forEach(function (n) { n.textContent = D.spolka.nazwa; });
 
+    // pas faktów w hero: wszystkie wartości z data.js
+    $('[data-lokale-liczba]').textContent = D.inwestycja.lokaleLiczba != null ? D.inwestycja.lokaleLiczba : D.lokale.length;
+    $('[data-powierzchnia]').textContent = zakres(D.lokale.map(function (l) { return l.powierzchnia; })) + '\u00a0m² na ' +
+      zakres(D.lokale.map(function (l) { return l.poziomy; })) + ' poziomach';
     if (D.inwestycja.terminOddania) $('[data-termin]').textContent = D.inwestycja.terminOddania;
 
     // cena od: najtańszy lokal, który nie jest sprzedany
@@ -102,44 +112,30 @@
 
   /* ---------- Nawigacja ---------- */
 
-  /* Hero: tekst zaczyna się równo z pierwszym linkiem nawigacji („O inwestycji”), gdy linki są widoczne */
-  function wyrownajHero() {
-    var hero = $('.hero');
-    var link = $('.nav__linki a');
-    if (!hero || !link) return;
-    function ustaw() {
-      var x = link.getBoundingClientRect().left;
-      if (x > 0 && window.matchMedia('(min-width: 900px)').matches) hero.style.setProperty('--hero-wciecie', Math.round(x) + 'px');
-      else hero.style.removeProperty('--hero-wciecie');
-    }
-    ustaw();
-    window.addEventListener('resize', ustaw);
-    if (document.fonts) document.fonts.ready.then(ustaw); // szerokość logo zależy od fontu
-  }
-
   function nawigacja() {
     var nav = $('#nav');
     var przycisk = $('.nav__menu-przycisk');
     var panel = $('#menu-panel');
 
-    function stanTla() {
-      nav.classList.toggle('nav--tlo', window.scrollY > 8 || !panel.hidden);
+    // linia pod nawigacją po przewinięciu (i przy otwartym menu)
+    function stanLinii() {
+      nav.classList.toggle('nav--linia', window.scrollY > 8 || !panel.hidden);
     }
-    window.addEventListener('scroll', stanTla, { passive: true });
-    stanTla();
+    window.addEventListener('scroll', stanLinii, { passive: true });
+    stanLinii();
 
     function zamknij(przywrocFokus) {
       panel.hidden = true;
       przycisk.setAttribute('aria-expanded', 'false');
       document.body.classList.remove('menu-otwarte');
-      stanTla();
+      stanLinii();
       if (przywrocFokus) przycisk.focus();
     }
     function otworz() {
       panel.hidden = false;
       przycisk.setAttribute('aria-expanded', 'true');
       document.body.classList.add('menu-otwarte');
-      stanTla();
+      stanLinii();
       var pierwszy = $('a', panel);
       if (pierwszy) pierwszy.focus();
     }
@@ -1062,7 +1058,6 @@
     wypelnijDane();
     wariantIntro();
     nawigacja();
-    wyrownajHero();
     nakladkaLokali();
     cennik();
     oknaZamykanie();
