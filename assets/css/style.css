@@ -1,6 +1,6 @@
 /* ==========================================================================
    Chodzieska 51 — style
-   Tokeny na początku pliku. Zasady: bez złota, gradientów, cieni i zaokrągleń.
+   Tokeny na początku pliku. Zasady: bez złota (jedyny wyjątek: znak logo), gradientów, cieni i zaokrągleń.
    ========================================================================== */
 
 :root {
@@ -15,6 +15,8 @@
   --stopka-tekst: #E4D9CE;    /* tekst w stopce (10,3:1 na balustradzie) */
   --stopka-link: #C09684;     /* linki w stopce (5,41:1 na balustradzie) */
   --prazek: #44332A;          /* pionowe prążki w ciemnych sekcjach (img/prazki.svg) */
+  --logo-tlo: #1A1A18;        /* tło znaku logo */
+  --logo-ramka: #C8A96E;      /* złota ramka i „CHO” w znaku logo (7,77:1 na tle znaku) — złoto TYLKO w logo */
 
   /* Przyciski główne (CTA): ciemne, żeby nie zlewały się z brązową okładziną na renderach */
   --cta: var(--balustrada);         /* tło przycisku głównego, tekst --tynk (12,8:1) */
@@ -277,7 +279,9 @@ button { cursor: pointer; }
 .link-poboczny:focus-visible::after { transform: scaleX(1); }
 
 /* --------------------------------------------------------------------------
-   Nawigacja: jeden pasek na tle --tynk, przyklejony do góry; po przewinięciu linia --kostka
+   Nawigacja: przyklejona do góry. Od 768 px na górze strony przezroczysta (leży na jasnym pasie
+   nad nagraniem hero), po zniknięciu hero z ekranu tło --tynk i linia --kostka (main.js: nav--tlo).
+   Telefon: zawsze tło --tynk, linia po przewinięciu (nav--linia).
    -------------------------------------------------------------------------- */
 .nav {
   position: fixed;
@@ -286,9 +290,13 @@ button { cursor: pointer; }
   height: var(--nav-h);
   background: var(--tynk);
   border-bottom: 1px solid transparent;
-  transition: border-color .2s linear;
+  transition: background-color .2s linear, border-color .2s linear;
 }
-.nav--linia { border-bottom-color: var(--kostka); } /* main.js po przewinięciu; na stronach pomocniczych zawsze */
+.nav--linia { border-bottom-color: var(--kostka); } /* telefon: po przewinięciu; na stronach pomocniczych zawsze */
+@media (min-width: 768px) {
+  .nav:not(.nav--tlo) { background: transparent; border-bottom-color: transparent; }
+  .nav--tlo { border-bottom-color: var(--kostka); }
+}
 .nav__wnetrze {
   height: 100%;
   max-width: var(--max);   /* ten sam kontener co .wrap: logo równo z h1 i treścią sekcji */
@@ -311,8 +319,9 @@ button { cursor: pointer; }
   text-decoration: none;
   white-space: nowrap;
 }
-/* Znak logo: kwadrat --balustrada bez obramowania, „CHO” nad „51” w kolorze --tynk */
+/* Znak logo: ciemny kwadrat, złota ramka, cienka ramka wewnętrzna, „CHO” nad „51” */
 .logo-znak {
+  position: relative;
   flex-shrink: 0;
   width: 48px;
   height: 48px;
@@ -321,22 +330,30 @@ button { cursor: pointer; }
   align-items: center;
   justify-content: center;
   gap: 3px;
-  background: var(--balustrada);
-  color: var(--tynk);
+  background: var(--logo-tlo);
+  border: 2px solid var(--logo-ramka);
+}
+.logo-znak::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid color-mix(in srgb, var(--logo-ramka) 40%, transparent);
 }
 .logo-znak__cho {
   font-size: 8px;
   font-weight: var(--fw-sredni);
   letter-spacing: .35em;
   margin-right: -.35em;   /* odstęp za ostatnią literą psułby wyśrodkowanie */
+  color: var(--logo-ramka);
 }
 .logo-znak__nr {
   font-size: 21px;
   font-weight: var(--fw-sredni);
   letter-spacing: -0.02em;
+  color: var(--tynk);     /* 15,6:1 na tle znaku */
 }
-/* Sam znak (nazwa tylko dla czytników): na wąskich telefonach przyciski nie mieszczą się obok nazwy */
-@media (max-width: 519px) {
+/* Sam znak (nazwa tylko dla czytników): poniżej 560 px przyciski, a przy 1280–1319 px linki nie mieszczą się obok nazwy */
+@media (max-width: 559px), (min-width: 1280px) and (max-width: 1319px) {
   .nav__nazwa {
     position: absolute;
     width: 1px;
@@ -378,8 +395,11 @@ button { cursor: pointer; }
   align-items: center;
   gap: 8px;
 }
-/* W pasku tylko „Zadzwoń” (bez „Zapytaj o lokal”, które powtarzało się z hero): od 768 px z numerem, węziej sam napis */
-.nav__akcje .nav__telefon--krotki { display: none; }
+/* Telefon w pasku od 1100 px (węziej w panelu menu), drugorzędny z pełnym tłem --tynk (leży na nagraniu);
+   „Zapytaj o lokal” (główny) zawsze */
+.nav__akcje .nav__telefon { display: none; }
+.nav__telefon.btn--drugi { background: var(--tynk); }
+.nav__telefon.btn--drugi:hover { background: var(--balustrada); }
 
 .nav__menu-przycisk {
   display: inline-flex;
@@ -420,14 +440,15 @@ button { cursor: pointer; }
 }
 .nav__panel-kontakt { display: flex; flex-direction: column; align-items: flex-start; gap: 16px; }
 
-@media (max-width: 767px) {
-  .nav__akcje .nav__telefon { display: none; }
-  .nav__akcje .nav__telefon--krotki { display: inline-flex; }
-}
+/* Najwęższe telefony: „Menu” tylko jako ikona (napis zostaje dla czytników), mniejszy przycisk zapytania */
 @media (max-width: 399px) {
-  .nav__akcje .btn, .nav__menu-przycisk { padding-inline: 12px; } /* przy 320 px „Zadzwoń” i „Menu” mieszczą się obok znaku */
+  .nav__wnetrze { gap: 12px; }
+  .nav__menu-przycisk { gap: 0; padding: 0; width: 48px; justify-content: center; }
+  .nav__menu-napis { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .nav__akcje .btn { padding-inline: 16px; }
 }
-@media (min-width: 768px) {
+@media (min-width: 1100px) {
+  .nav__akcje .nav__telefon { display: inline-flex; }
   .nav__panel-kontakt .nav__telefon { display: none; } /* numer jest w pasku */
 }
 @media (min-width: 1280px) {
@@ -438,56 +459,80 @@ button { cursor: pointer; }
 }
 
 /* --------------------------------------------------------------------------
-   1. Hero (wariant B): rząd tekstu, panorama na całą szerokość, pas faktów
+   1. Hero: wideo (do czasu załadowania plakat) na całą szerokość, napisy wprost na nagraniu,
+      pod nim pas faktów. Telefon (< 768 px): nagranie bez tekstu, tekst i fakty pod nim.
    -------------------------------------------------------------------------- */
 .hero {
-  /* --hero-reszta: zmierzona (Chromium) wysokość nawigacji, rzędu tekstu i pasa faktów, bez panoramy;
-     panorama dostaje resztę pierwszego ekranu, nie więcej niż 42,86vw i nie mniej niż 280 px.
-     Od 1280 px: 72 (nawigacja) + 219 (rząd: 48 + 131 + 40) + 83 (pas faktów) = 374 px.
-     Przy zmianie odstępów, fontu albo treści zmierzyć ponownie. */
-  --hero-reszta: 374px;
-  padding-top: var(--nav-h);
+  /* --fakty-h: zmierzona (Chromium) wysokość pasa faktów; scena = reszta pierwszego ekranu.
+     83,6 px od 1280 px (wartości w jednym wierszu), 109,6 px przy 768–1279 px (wartości w dwóch); zaokrąglone w górę. */
+  --fakty-h: 110px;
+  --kadr: 50% 50%;         /* object-position plakatu i wideo (desktop) */
   background: var(--tynk);
+  padding-top: var(--nav-h); /* telefon: nawigacja z pełnym tłem nad nagraniem */
 }
-.hero__rzad {
+.hero__scena { position: relative; }
+.hero__media {
+  position: relative;
+  height: 60svh;
+  overflow: hidden;
+  background: var(--tynk-cien);
+}
+.hero__plakat,
+.hero__plakat img,
+.hero__wideo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: var(--kadr-telefon, 62% 50%); /* telefon: kadr na budynki (wejścia C i D) */
+}
+/* Wideo nad plakatem, widoczne dopiero po canplay (przejście 300 ms); plakat zostaje pod spodem */
+.hero__wideo { opacity: 0; transition: opacity .3s linear; }
+.hero__wideo.is-gotowe { opacity: 1; }
+/* Przycisk pauzy: prawy dolny róg nagrania, nad pasem faktów */
+.hero__pauza {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 16px;
+  z-index: 1;
   display: grid;
-  gap: 24px;
-  padding-top: 40px;
-  padding-bottom: 32px;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: var(--tynk);
+  color: var(--balustrada);
 }
+.hero__pauza:hover { background: var(--tynk-cien); }
+.hero__pauza:focus-visible { outline: 2px solid var(--balustrada); outline-offset: -6px; } /* obrys wewnątrz jasnego przycisku: widoczny na każdej klatce */
+.hero__pauza .ikona { width: 20px; height: 20px; }
+.hero__pauza .ikona--odtworz,
+.hero__pauza.is-zatrzymane .ikona--pauza { display: none; }
+.hero__pauza.is-zatrzymane .ikona--odtworz { display: block; }
+.hero__tekst { padding-top: 32px; padding-bottom: 32px; }
 .hero h1 {
   font-size: var(--fs-hero);
   font-weight: var(--fw-lekki);
   letter-spacing: -0.02em;
   line-height: 1;
   font-variant-numeric: lining-nums; /* „51” na linii bazowej */
-  overflow-wrap: normal;
+  color: var(--balustrada);
+  margin-bottom: 20px;
 }
 .hero__lead {
   font-size: 20px;
   line-height: 1.4;
   max-width: 36ch;
   margin-bottom: 24px;
+  color: var(--balustrada);
 }
 .hero__akcje { display: flex; flex-direction: column; gap: 12px; }
 .hero__akcje .btn { width: 100%; }
 
-.hero__panorama {
-  margin: 0;
-  aspect-ratio: 4 / 3; /* telefon: kadr na budynki */
-  overflow: hidden;
-  background: var(--tynk-cien);
-}
-.hero__panorama picture { height: 100%; }
-.hero__panorama img {
-  width: 100%;
-  height: 100%;
-  max-width: none;
-  object-fit: cover;
-  object-position: 58% 50%;  /* oba budynki w kadrze 4:3 */
-}
-
-.hero__fakty { border-top: var(--line); border-bottom: var(--line); }
+.hero__fakty { border-top: var(--line); border-bottom: var(--line); background: var(--tynk); }
 .hero__fakty-lista {
   list-style: none;
   margin-block: 0;
@@ -506,28 +551,51 @@ button { cursor: pointer; }
 .hero__fakty .wartosc { font-size: 20px; line-height: 1.3; font-weight: var(--fw-sredni); color: var(--balustrada); }
 
 @media (min-width: 768px) {
-  .hero__rzad { padding-top: 48px; padding-bottom: 40px; }
+  .hero { padding-top: 0; }
+  /* Scena = pierwszy ekran bez pasa faktów, nie mniej niż 560 px; nagranie pod nawigacją i tekstem */
+  .hero__scena { height: max(560px, calc(100svh - var(--fakty-h))); }
+  .hero__media { position: absolute; inset: 0; height: auto; }
+  .hero__plakat, .hero__plakat img, .hero__wideo { object-position: var(--kadr); }
+  /* Jasny pas u góry nagrania: --tynk 70% przy krawędzi (i na całej wysokości nawigacji, żeby linki miały
+     kontrast ≥ 4,5:1 na każdej klatce) → przezroczysty na 28% wysokości sceny.
+     Nad wideo, pod nawigacją i tekstem; poza nim (i poza poświatą pod tekstem) nagranie ma oryginalne kolory. */
+  .hero__media::after {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 28%;
+    background: linear-gradient(to bottom, rgba(245, 242, 235, .7) var(--nav-h), rgba(245, 242, 235, 0));
+    pointer-events: none;
+  }
+  .hero__tekst {
+    position: relative;
+    padding-top: calc(var(--nav-h) + clamp(32px, 5vh, 56px));
+    padding-bottom: 0;
+  }
+  /* Poświata pod blokiem tekstu: --tynk 70% z miękkimi krawędziami (rozmycie 24 px), tylko pod h1, zdaniem
+     i przyciskami. Ostateczność z punktu 12: na żadnym miejscu kadru tło nie jest jasne przez całe nagranie
+     (pomiar w CLAUDE.md, sekcja 6a); 70% --tynk daje ≥ 4,5:1 dla --balustrady nawet na czarnym tle. */
+  .hero__blok { position: relative; isolation: isolate; width: fit-content; max-width: 100%; }
+  .hero__blok::before {
+    content: "";
+    position: absolute;
+    inset: -32px -48px;
+    z-index: -1;
+    background: rgba(245, 242, 235, .7);
+    filter: blur(24px);
+    pointer-events: none;
+  }
   .hero__lead { font-size: 21px; }
+  /* „Zapytaj o lokal” na nagraniu: pełne tło --tynk (wariant .btn--jasny), nie przezroczysty drugorzędny */
   .hero__akcje { flex-direction: row; flex-wrap: wrap; }
   .hero__akcje .btn { width: auto; }
-  .hero__panorama {
-    aspect-ratio: auto;
-    height: max(280px, min(42.86vw, calc(100svh - var(--hero-reszta))));
-  }
-  .hero__panorama img { object-position: 50% 6%; } /* dachy obu budynków w kadrze, przycięty głównie parking */
+  .hero__akcje .btn--drugi { background: var(--tynk); border-color: var(--tynk); color: var(--balustrada); }
+  .hero__akcje .btn--drugi:hover { background: var(--tynk-cien); border-color: var(--tynk-cien); color: var(--balustrada); }
   .hero__fakty-lista { grid-template-columns: repeat(4, minmax(0, 1fr)); }
   .hero__fakty li:nth-child(n) { padding: 16px 20px; border-top: 0; border-left: var(--line); }
   .hero__fakty li:first-child { padding-left: 0; border-left: 0; }
 }
-/* 768–899 px: rząd tekstu jeden pod drugim (291 px), wartości faktów w dwóch wierszach (110 px) */
-@media (min-width: 768px) and (max-width: 899px) { .hero { --hero-reszta: 473px; } }
-/* 900–1279 px: rząd w dwóch kolumnach (219 px), wartości faktów w dwóch wierszach (109 px) */
-@media (min-width: 900px) and (max-width: 1279px) { .hero { --hero-reszta: 400px; } }
-@media (min-width: 900px) {
-  /* h1 z lewej; zdanie i przyciski z prawej, dolną krawędzią równo z h1 */
-  .hero__rzad { grid-template-columns: minmax(0, 1fr) auto; align-items: end; column-gap: 48px; }
-  .hero h1 { white-space: nowrap; }
-}
+@media (min-width: 1280px) { .hero { --fakty-h: 84px; } }
 
 /* --------------------------------------------------------------------------
    2. Inwestycja: pierwszy rząd (zdanie i opis na całą szerokość),

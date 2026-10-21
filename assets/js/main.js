@@ -117,11 +117,21 @@
     var przycisk = $('.nav__menu-przycisk');
     var panel = $('#menu-panel');
 
-    // linia pod nawigacją po przewinięciu (i przy otwartym menu)
+    // Od 768 px nawigacja jest przezroczysta, dopóki hero jest na ekranie (pod nawigacją);
+    // potem i przy otwartym menu: tło --tynk i linia (nav--tlo). Telefon: linia po przewinięciu (nav--linia).
+    var scena = $('.hero__scena');
+    var heroWidoczne = !!scena;
     function stanLinii() {
       nav.classList.toggle('nav--linia', window.scrollY > 8 || !panel.hidden);
+      nav.classList.toggle('nav--tlo', !heroWidoczne || !panel.hidden);
     }
     window.addEventListener('scroll', stanLinii, { passive: true });
+    if (scena && 'IntersectionObserver' in window) {
+      new IntersectionObserver(function (wpisy) {
+        heroWidoczne = wpisy[0].isIntersecting;
+        stanLinii();
+      }, { rootMargin: '-' + nav.offsetHeight + 'px 0px 0px 0px' }).observe(scena);
+    }
     stanLinii();
 
     function zamknij(przywrocFokus) {
@@ -536,6 +546,103 @@
     }
     window.addEventListener('hashchange', zAdresu);
     zAdresu();
+  }
+
+  /* Hero: wideo w tle. Wczytywane dopiero po załadowaniu strony (load + requestIdleCallback);
+     do zdarzenia canplay, przy błędzie i przy zablokowanym autoodtwarzaniu widać plakat.
+     Nie wczytuje się wcale przy prefers-reduced-motion, oszczędzaniu danych i wolnym łączu na telefonie. */
+  var WIDEO_WYSOKOSCI = [720, 1080, 1440]; // wersje w assets/video/ (tools/wideo.sh)
+
+  function bezWideo() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
+    var lacze = navigator.connection;
+    if (lacze && lacze.saveData) return true;
+    if (lacze && window.innerWidth < 768 && /(^|-)[23]g$/.test(lacze.effectiveType || '')) return true; // slow-2g, 2g, 3g
+    return false;
+  }
+
+  function zrodloWideo(wideo) {
+    var px = window.innerWidth * (window.devicePixelRatio || 1);
+    var h = px < 1400 ? 720 : px < 2400 ? 1080 : 1440;
+    while (WIDEO_WYSOKOSCI.indexOf(h) < 0) h = h === 1440 ? 1080 : 720; // brak wersji: o stopień niżej
+    var webm = wideo.canPlayType('video/webm; codecs="vp9"') !== '';
+    return 'assets/video/hero-' + h + (webm ? '.webm' : '.mp4');
+  }
+
+  function poZaladowaniu(fn) {
+    function bezczynnie() {
+      if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 2000 });
+      else setTimeout(fn, 200);
+    }
+    if (document.readyState === 'complete') bezczynnie();
+    else window.addEventListener('load', bezczynnie, { once: true });
+  }
+
+  var WIDEO_KLUCZ = 'ch51-wideo'; // localStorage: 'zatrzymane' = użytkownik zatrzymał wideo
+
+  function pamiec(wartosc) {
+    try {
+      if (wartosc === undefined) return localStorage.getItem(WIDEO_KLUCZ);
+      if (wartosc === null) localStorage.removeItem(WIDEO_KLUCZ); else localStorage.setItem(WIDEO_KLUCZ, wartosc);
+    } catch (e) { return null; } // tryb prywatny / zablokowane dane witryny: bez zapamiętywania
+  }
+
+  function wideoHero() {
+    var wideo = $('.hero__wideo');
+    var przycisk = $('.hero__pauza');
+    if (!wideo || bezWideo()) return; // bez wideo nie ma też przycisku pauzy
+    var zatrzymane = pamiec() === 'zatrzymane'; // wybór użytkownika (także z poprzedniej wizyty)
+    var zablokowane = false;
+    var wczytane = false;
+
+    function ustawPrzycisk() {
+      przycisk.classList.toggle('is-zatrzymane', zatrzymane);
+      przycisk.setAttribute('aria-label', zatrzymane ? 'Odtwórz wideo' : 'Zatrzymaj wideo');
+    }
+    function graj() {
+      var gra = wideo.play();
+      if (gra && gra.catch) gra.catch(function () { // autoodtwarzanie zablokowane: zostaje plakat, bez przycisku
+        zablokowane = true;
+        wideo.classList.remove('is-gotowe');
+        przycisk.hidden = true;
+      });
+    }
+    function wczytaj() {
+      wczytane = true;
+      wideo.muted = true; // autoodtwarzanie w przeglądarkach wymaga wyciszenia
+      wideo.addEventListener('canplay', function () {
+        if (zablokowane) return;
+        wideo.classList.add('is-gotowe');
+        przycisk.hidden = false;
+      }, { once: true });
+      wideo.addEventListener('error', function () { wideo.classList.remove('is-gotowe'); przycisk.hidden = true; });
+      wideo.src = zrodloWideo(wideo);
+      graj();
+    }
+
+    przycisk.addEventListener('click', function () {
+      zatrzymane = !zatrzymane;
+      pamiec(zatrzymane ? 'zatrzymane' : null);
+      ustawPrzycisk();
+      if (zatrzymane) wideo.pause();
+      else if (!wczytane) wczytaj();
+      else graj();
+    });
+    ustawPrzycisk();
+
+    if (zatrzymane) {
+      przycisk.hidden = false; // zatrzymane w poprzedniej wizycie: plakat i przycisk „Odtwórz wideo”, wideo się nie wczytuje
+    } else {
+      poZaladowaniu(wczytaj);
+    }
+
+    // poza ekranem wideo stoi (mniej pracy procesora), po powrocie gra dalej, chyba że użytkownik je zatrzymał
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (wpisy) {
+        if (!wczytane || zablokowane || zatrzymane) return;
+        if (wpisy[0].isIntersecting) graj(); else wideo.pause();
+      }).observe(wideo);
+    }
   }
 
   /* Telefon: dolny pasek „Zadzwoń” / „Zapytaj o lokal”. Widoczny po przewinięciu poza hero,
@@ -1067,6 +1174,7 @@
     podglad();
     karta();
     pasekDolny();
+    wideoHero();
     przewijanieDoSekcji();
     mapaLeniwie();
   }

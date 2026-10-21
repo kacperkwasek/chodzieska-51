@@ -8,7 +8,7 @@
 window.CH51_DATA = {
   spolka: {
     nazwa: 'Sanit Investments',
-    adres: 'ul. Żerzeńska 31, Warszawa',
+    adres: 'ul. Zerzeńska 31, Warszawa',
     telefon: '+48 690 888 849',
     email: 'kontakt@sanitinvestments.pl', // POGLĄDOWE
     krs: '0000000000', // POGLĄDOWE

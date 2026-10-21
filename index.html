@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://tile.openstreetmap.org; font-src 'self'; media-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -52,11 +52,10 @@
         </ul>
       </nav>
       <div class="nav__akcje">
-        <!-- od 768 px pełny numer, węziej samo „Zadzwoń” -->
         <a class="btn btn--drugi nav__telefon" href="tel:+48690888849" data-telefon="pelny">Zadzwoń: +48 690 888 849</a>
-        <a class="btn btn--drugi nav__telefon nav__telefon--krotki" href="tel:+48690888849" data-telefon="krotki">Zadzwoń</a>
+        <a class="btn" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
         <button class="nav__menu-przycisk" type="button" aria-expanded="false" aria-controls="menu-panel">
-          <svg class="ikona ikona--menu" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#menu"></use></svg><svg class="ikona ikona--zamknij" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zamknij"></use></svg>Menu
+          <svg class="ikona ikona--menu" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#menu"></use></svg><svg class="ikona ikona--zamknij" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zamknij"></use></svg><span class="nav__menu-napis">Menu</span>
         </button>
       </div>
     </div>
@@ -80,28 +79,37 @@
 
   <main id="tresc">
 
-    <!-- 1. Hero (wariant B): nagłówek nad panoramą, pod nią pas faktów; żaden tekst nie leży na zdjęciu -->
+    <!-- 1. Hero: plakat (pierwsza klatka nagrania), na nim napisy; pod spodem pas faktów.
+         Telefon: nagranie bez tekstu, tekst i fakty pod nim. -->
     <section class="hero" id="gora" aria-labelledby="hero-tytul">
-      <div class="wrap hero__rzad">
-        <h1 id="hero-tytul">Chodzieska 51</h1>
-        <div class="hero__prawa">
-          <p class="hero__lead">Cztery trzypoziomowe lokale po 100&nbsp;m² w zielonej części Wawra.</p>
-          <div class="hero__akcje">
-            <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
-            <a class="btn btn--drugi" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+      <div class="hero__scena">
+        <div class="hero__media">
+          <picture class="hero__plakat">
+            <source type="image/webp" sizes="(max-width: 767px) 107vh, 100vw"
+              srcset="assets/img/hero-plakat-1280.webp 1280w, assets/img/hero-plakat-1920.webp 1920w, assets/img/hero-plakat-2560.webp 2560w">
+            <img src="assets/img/hero-plakat-1920.jpg"
+              srcset="assets/img/hero-plakat-1280.jpg 1280w, assets/img/hero-plakat-1920.jpg 1920w, assets/img/hero-plakat-2560.jpg 2560w"
+              sizes="(max-width: 767px) 107vh, 100vw" width="2560" height="1440" loading="eager" fetchpriority="high" decoding="async"
+              alt="Wejścia do lokali C i D: brązowa okładzina, balkony z lamelami, przed nimi schody, nasadzenia i ogrodzenie">
+          </picture>
+          <!-- Wideo dekoracyjne: źródło (720p / 1080p / 1440p, WebM albo MP4) wybiera i wczytuje main.js po załadowaniu strony -->
+          <video class="hero__wideo" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+          <!-- Pauza (WCAG 2.2.2): widoczna tylko, gdy wideo może grać; wybór zapamiętany w localStorage -->
+          <button type="button" class="hero__pauza" aria-label="Zatrzymaj wideo" hidden>
+            <svg class="ikona ikona--pauza" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#pauza"></use></svg><svg class="ikona ikona--odtworz" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#odtworz"></use></svg>
+          </button>
+        </div>
+        <div class="wrap hero__tekst">
+          <div class="hero__blok">
+            <h1 id="hero-tytul">Chodzieska 51</h1>
+            <p class="hero__lead">Cztery trzypoziomowe lokale po 100&nbsp;m² w zielonej części Wawra.</p>
+            <div class="hero__akcje">
+              <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
+              <a class="btn btn--drugi" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
+            </div>
           </div>
         </div>
       </div>
-      <figure class="hero__panorama">
-        <picture>
-          <source type="image/webp" sizes="(max-width: 767px) 162vw, 100vw"
-            srcset="assets/img/wizualizacja-3-640.webp 640w, assets/img/wizualizacja-3-1280.webp 1280w, assets/img/wizualizacja-3-1412.webp 1412w, assets/img/wizualizacja-3-2560.webp 2560w">
-          <img src="assets/img/wizualizacja-3-1412.jpg"
-            srcset="assets/img/wizualizacja-3-640.jpg 640w, assets/img/wizualizacja-3-1280.jpg 1280w, assets/img/wizualizacja-3-1412.jpg 1412w, assets/img/wizualizacja-3-2560.jpg 2560w"
-            sizes="(max-width: 767px) 162vw, 100vw" width="1412" height="656" loading="eager" fetchpriority="high" decoding="async"
-            alt="Dwa budynki Chodzieska 51 od strony parkingu: jasny tynk, brązowa okładzina, balkony z lamelami i zieleń wokół">
-        </picture>
-      </figure>
       <!-- Pas faktów: wartości wstawia main.js z data.js -->
       <div class="hero__fakty">
         <ul class="wrap hero__fakty-lista">
@@ -468,7 +476,7 @@
             <div class="zgoda">
               <input type="checkbox" id="pow-zgoda" name="zgoda_powiadomienia" value="tak" required aria-describedby="pow-zgoda-blad">
               <div>
-                <label for="pow-zgoda">Zgadzam się na otrzymywanie od Sanit Investments, ul. Żerzeńska 31, Warszawa, e-maili z informacjami o kolejnych inwestycjach. Zgodę mogę wycofać w każdej chwili. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</label><!-- treść POGLĄDOWA, do weryfikacji przez prawnika -->
+                <label for="pow-zgoda">Zgadzam się na otrzymywanie od Sanit Investments, ul. Zerzeńska 31, Warszawa, e-maili z informacjami o kolejnych inwestycjach. Zgodę mogę wycofać w każdej chwili. Szczegóły w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</label><!-- treść POGLĄDOWA, do weryfikacji przez prawnika -->
                 <span class="blad" id="pow-zgoda-blad" hidden></span>
               </div>
             </div>
@@ -564,7 +572,7 @@
               <details class="klauzule">
                 <summary>Pełna treść klauzul</summary>
                 <!-- Treść POGLĄDOWA, do weryfikacji przez prawnika -->
-                <p>Administratorem Twoich danych osobowych jest Sanit Investments, ul. Żerzeńska 31, Warszawa. Dane z formularza (imię, telefon, e-mail, treść wiadomości) przetwarzamy, żeby odpowiedzieć na zapytanie i skontaktować się z Tobą w wybrany sposób (art. 6 ust. 1 lit. a i b RODO). Podanie danych jest dobrowolne, ale bez nich nie odpowiemy na zapytanie.</p>
+                <p>Administratorem Twoich danych osobowych jest Sanit Investments, ul. Zerzeńska 31, Warszawa. Dane z formularza (imię, telefon, e-mail, treść wiadomości) przetwarzamy, żeby odpowiedzieć na zapytanie i skontaktować się z Tobą w wybrany sposób (art. 6 ust. 1 lit. a i b RODO). Podanie danych jest dobrowolne, ale bez nich nie odpowiemy na zapytanie.</p>
                 <p>Dane przechowujemy do zakończenia rozmów o zakupie lokalu, a potem przez okres przedawnienia ewentualnych roszczeń. Odbiorcami danych mogą być firmy, które świadczą nam usługi hostingu i poczty elektronicznej. Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia przetwarzania i przeniesienia, a także prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.</p>
                 <p>Zgodę na kontakt telefoniczny lub e-mailowy możesz wycofać w każdej chwili, pisząc na <a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a>. Wycofanie zgody nie wpływa na zgodność z prawem przetwarzania przed jej wycofaniem. Więcej w <a href="polityka-prywatnosci.html">polityce prywatności</a>.</p>
               </details>
@@ -591,7 +599,7 @@
           <h2>Deweloper</h2>
           <dl>
             <div><dt>Nazwa</dt><dd data-spolka="nazwa">Sanit Investments</dd></div>
-            <div><dt>Adres</dt><dd data-spolka="adres">ul. Żerzeńska 31, Warszawa</dd></div>
+            <div><dt>Adres</dt><dd data-spolka="adres">ul. Zerzeńska 31, Warszawa</dd></div>
             <div><dt>Telefon</dt><dd data-spolka="telefon"><a href="tel:+48690888849">+48 690 888 849</a></dd></div>
             <div><dt>E-mail</dt><dd data-spolka="email"><a href="mailto:kontakt@sanitinvestments.pl">kontakt@sanitinvestments.pl</a></dd></div>
             <div><dt>KRS</dt><dd data-spolka="krs">0000000000</dd></div>
