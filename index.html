@@ -2,7 +2,7 @@
 <html lang="pl">
 <head>
   <meta charset="utf-8">
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://tile.openstreetmap.org; font-src 'self'; media-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' https://tile.openstreetmap.org; font-src 'self'; connect-src 'self'; form-action 'self'; base-uri 'self'; object-src 'none'">
   <meta name="referrer" content="strict-origin-when-cross-origin">
   <meta name="robots" content="noindex">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -82,25 +82,25 @@
 
   <main id="tresc">
 
-    <!-- 1. Hero: plakat (pierwsza klatka nagrania), na nim napisy; pod spodem pas faktów.
-         Telefon: nagranie bez tekstu, tekst i fakty pod nim. -->
+    <!-- 1. Hero: render 3 na całą szerokość, na nim napisy; pod spodem pas zalet.
+         Telefon: obraz bez tekstu, tekst i zalety pod nim.
+         sizes = szerokość obrazu przy object-fit: cover (proporcje 1412:656 = 2,15:1). Telefon: scena 60svh,
+         więc max(100vw, 60vh × 2,15). Od 768 px scena ma max(560 px, 100svh − pas zalet), więc
+         max(100vw, 560 px × 2,15, 2,15 × (100vh − pas zalet)); pas zalet 248 / 208 / 125 px (--fakty-h w style.css).
+         Wersje z samym calc() to zapas dla przeglądarek bez max() w sizes. -->
     <section class="hero" id="gora" aria-labelledby="hero-tytul">
       <div class="hero__scena">
         <div class="hero__media">
-          <picture class="hero__plakat">
-            <source type="image/webp" sizes="(max-width: 767px) 107vh, 100vw"
-              srcset="assets/img/hero-plakat-1280.webp 1280w, assets/img/hero-plakat-1920.webp 1920w, assets/img/hero-plakat-2560.webp 2560w">
-            <img src="assets/img/hero-plakat-1920.jpg"
-              srcset="assets/img/hero-plakat-1280.jpg 1280w, assets/img/hero-plakat-1920.jpg 1920w, assets/img/hero-plakat-2560.jpg 2560w"
-              sizes="(max-width: 767px) 107vh, 100vw" width="2560" height="1440" loading="eager" fetchpriority="high" decoding="async"
-              alt="Wejścia do lokali C i D: brązowa okładzina, balkony z lamelami, przed nimi schody, nasadzenia i ogrodzenie">
+          <picture class="hero__obraz">
+            <source type="image/webp"
+              sizes="(max-width: 767px) max(100vw, 130vh), (max-width: 767px) 130vh, (max-width: 859px) max(100vw, 1206px, calc(215vh - 534px)), (max-width: 1279px) max(100vw, 1206px, calc(215vh - 448px)), max(100vw, 1206px, calc(215vh - 269px)), calc(215vh - 269px)"
+              srcset="assets/img/wizualizacja-3-640.webp 640w, assets/img/wizualizacja-3-1280.webp 1280w, assets/img/wizualizacja-3-1412.webp 1412w, assets/img/wizualizacja-3-2560.webp 2560w">
+            <img src="assets/img/wizualizacja-3-1412.jpg"
+              srcset="assets/img/wizualizacja-3-640.jpg 640w, assets/img/wizualizacja-3-1280.jpg 1280w, assets/img/wizualizacja-3-1412.jpg 1412w, assets/img/wizualizacja-3-2560.jpg 2560w"
+              sizes="(max-width: 767px) max(100vw, 130vh), (max-width: 767px) 130vh, (max-width: 859px) max(100vw, 1206px, calc(215vh - 534px)), (max-width: 1279px) max(100vw, 1206px, calc(215vh - 448px)), max(100vw, 1206px, calc(215vh - 269px)), calc(215vh - 269px)"
+              width="1412" height="656" loading="eager" fetchpriority="high" decoding="async"
+              alt="Dwa budynki Chodzieska 51 od strony parkingu: jasny tynk, brązowa okładzina, balkony z lamelami i zieleń wokół">
           </picture>
-          <!-- Wideo dekoracyjne: źródło (720p / 1080p / 1440p, WebM albo MP4) wybiera i wczytuje main.js po załadowaniu strony -->
-          <video class="hero__wideo" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
-          <!-- Pauza (WCAG 2.2.2): widoczna tylko, gdy wideo może grać; wybór zapamiętany w localStorage -->
-          <button type="button" class="hero__pauza" aria-label="Zatrzymaj wideo" hidden>
-            <svg class="ikona ikona--pauza" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#pauza"></use></svg><svg class="ikona ikona--odtworz" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#odtworz"></use></svg>
-          </button>
         </div>
         <div class="wrap hero__tekst">
           <div class="hero__blok">
@@ -113,13 +113,17 @@
           </div>
         </div>
       </div>
-      <!-- Pas faktów: wartości wstawia main.js z data.js -->
-      <div class="hero__fakty">
-        <ul class="wrap hero__fakty-lista">
-          <li><span class="etykieta">Lokale</span><span class="wartosc" data-lokale-liczba></span></li>
-          <li><span class="etykieta">Powierzchnia</span><span class="wartosc" data-powierzchnia></span></li>
-          <li><span class="etykieta">Termin oddania</span><span class="wartosc" data-termin></span></li>
-          <li><span class="etykieta">Cena od</span><span class="wartosc" data-cena-od></span></li>
+      <!-- Pas zalet: ikona nad podpisem. Liczby w dwóch pierwszych nadpisuje main.js z data.js -->
+      <div class="hero__zalety">
+        <ul class="wrap hero__zalety-lista" aria-label="Zalety inwestycji">
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#dom"></use></svg><span><span data-lokale-liczba>4</span> lokale w&nbsp;<span data-budynki>2</span> budynkach</span></li>
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#schody"></use></svg><span><span data-powierzchnia>100</span>&nbsp;m² na <span data-poziomy>3</span> poziomach</span></li>
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#zielen"></use></svg><span>Zielona część Wawra</span></li>
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#parking"></use></svg><span>Parking przy budynkach</span></li>
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#ogrodzenie"></use></svg><span>Ogrodzony teren z&nbsp;bramą</span></li>
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#okno"></use></svg><span>Duże przeszklenia</span></li>
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#pompa-ciepla"></use></svg><span>Pompa ciepła</span></li>
+          <li><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#klimatyzacja"></use></svg><span>Klimatyzacja</span></li>
         </ul>
       </div>
     </section>
