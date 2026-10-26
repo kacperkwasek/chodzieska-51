@@ -15,8 +15,8 @@
   --stopka-tekst: #E4D9CE;    /* tekst w stopce (10,3:1 na balustradzie) */
   --stopka-link: #C09684;     /* linki w stopce (5,41:1 na balustradzie) */
   --prazek: #44332A;          /* pionowe prążki w ciemnych sekcjach (img/prazki.svg) */
-  --logo-tlo: var(--okladzina-ciemna); /* tło znaku logo (brąz z palety; „51” w --tynk 9,14:1) */
-  --logo-ramka: #C8A96E;      /* złota ramka i „CHO” w znaku logo (4,55:1 na tle znaku) — złoto TYLKO w logo */
+  --logo-tlo: var(--cta);     /* tło znaku logo = przycisk główny (--balustrada); „51” w --tynk 12,8:1 */
+  --logo-ramka: #C8A96E;      /* złota ramka i „CHO” w znaku logo (6,38:1 na tle znaku) — złoto TYLKO w logo */
 
   /* Przyciski główne (CTA): ciemne, żeby nie zlewały się z brązową okładziną na renderach */
   --cta: var(--balustrada);         /* tło przycisku głównego, tekst --tynk (12,8:1) */
@@ -350,7 +350,7 @@ button { cursor: pointer; }
   font-size: 21px;
   font-weight: var(--fw-sredni);
   letter-spacing: -0.02em;
-  color: var(--tynk);     /* 15,6:1 na tle znaku */
+  color: var(--tynk);     /* 12,8:1 na tle znaku */
 }
 /* Sam znak (nazwa tylko dla czytników): poniżej 560 px przyciski, a przy 1280–1319 px linki nie mieszczą się obok nazwy */
 @media (max-width: 559px), (min-width: 1280px) and (max-width: 1319px) {
@@ -459,8 +459,8 @@ button { cursor: pointer; }
 }
 
 /* --------------------------------------------------------------------------
-   1. Hero: render 3 na całą szerokość, napisy wprost na obrazie,
-      pod nim pas zalet (ikona nad podpisem). Telefon (< 768 px): obraz bez tekstu, tekst i zalety pod nim.
+   1. Hero: wideo (4 klipy po kolei; do czasu załadowania plakat) na całą szerokość, napisy wprost na nagraniu,
+      pod nim pas zalet (ikona nad podpisem). Telefon (< 768 px): nagranie bez tekstu, tekst i zalety pod nim.
    -------------------------------------------------------------------------- */
 .hero {
   /* --fakty-h: zmierzona (Chromium) wysokość pasa zalet; scena = reszta pierwszego ekranu.
@@ -468,25 +468,27 @@ button { cursor: pointer; }
      207,5 px; przy 768–852 px (część podpisów w 2 wierszach) 227,75–248 px. Zaokrąglone w górę; próg 860 px
      z zapasem na różnice w renderowaniu fontu. Po zmianie podpisów, odstępów albo fontu zmierzyć ponownie. */
   --fakty-h: 248px;
-  /* Kadr (object-position) renderu 3 (2,15:1). Budynki zajmują ok. 33–74% szerokości obrazu, dach bliższego
-     zaczyna się ok. 5% od góry. Pionowo 0%: gdy okno jest szersze niż obraz, przycinany jest dół (kostka),
-     a nie dachy. Telefon (60svh, widać ok. 36% szerokości): cały bliższy budynek i początek dalszego.
-     Od 768 px środek; od 1280 px przy oknach co najmniej 8:5 obraz jest przycinany tylko z prawej (0%),
-     więc budynki odsuwają się od tekstu, a oba (z dachami) zostają w kadrze (widać ≥ 80% szerokości). */
-  --kadr: 50% 0%;
-  --kadr-telefon: 47% 0%;
+  /* Kadr (object-position) plakatu i wideo (16:9), wspólny dla 4 klipów (budynki w środkowej części kadru,
+     zrzuty 375–2560 px). Okna desktopowe (scena szersza niż 16:9): nagranie przycinane tylko w pionie (do ok. 10%),
+     30% nadmiaru od góry, żeby dach budynku w klipie 3 nie wchodził pod nawigację, a budynki na końcu klipu 4
+     (dron się oddala, budynki schodzą w dół kadru) nie znikały pod pasem zalet. Telefon i tablet pionowo
+     (scena węższa niż 16:9): przycinane boki, środek kadru — w każdym klipie widać wejścia albo cały budynek. */
+  --kadr: 50% 30%;
+  --kadr-telefon: 50% 50%;
   background: var(--tynk);
-  padding-top: var(--nav-h); /* telefon: nawigacja z pełnym tłem nad obrazem */
+  padding-top: var(--nav-h); /* telefon: nawigacja z pełnym tłem nad nagraniem */
 }
 .hero__scena { position: relative; }
 .hero__media {
   position: relative;
+  isolation: isolate; /* z-index wideo, pasa i pauzy działa tylko wewnątrz; tekst hero zostaje nad całością */
   height: 60svh;
   overflow: hidden;
   background: var(--tynk-cien);
 }
-.hero__obraz,
-.hero__obraz img {
+.hero__plakat,
+.hero__plakat img,
+.hero__wideo {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -495,6 +497,34 @@ button { cursor: pointer; }
   object-fit: cover;
   object-position: var(--kadr-telefon);
 }
+/* Wideo nad plakatem: dwa odtwarzacze na zmianę (main.js). Widoczny po canplay (.is-gotowe); przy zmianie klipu
+   następny leży na wierzchu (.is-wierzch) i pojawia się w 0,7 s nad poprzednim, który gra dalej pod spodem —
+   przenikanie bez przyciemnienia i bez czarnej klatki. Plakat (= pierwsza klatka klipu 1) zostaje pod spodem.
+   Czas przejścia = PRZENIKANIE w main.js. */
+.hero__wideo { opacity: 0; transition: opacity .7s linear; }
+.hero__wideo.is-gotowe { opacity: 1; }
+.hero__wideo.is-wierzch { z-index: 1; }
+/* Przycisk pauzy: prawy dolny róg nagrania, nad pasem zalet */
+.hero__pauza {
+  position: absolute;
+  right: var(--gutter);
+  bottom: 16px;
+  z-index: 3;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  background: var(--tynk);
+  color: var(--balustrada);
+}
+.hero__pauza:hover { background: var(--tynk-cien); }
+.hero__pauza:focus-visible { outline: 2px solid var(--balustrada); outline-offset: -6px; } /* obrys wewnątrz jasnego przycisku: widoczny na każdej klatce */
+.hero__pauza .ikona { width: 20px; height: 20px; }
+.hero__pauza .ikona--odtworz,
+.hero__pauza.is-zatrzymane .ikona--pauza { display: none; }
+.hero__pauza.is-zatrzymane .ikona--odtworz { display: block; }
 .hero__tekst { padding-top: 32px; padding-bottom: 32px; }
 .hero h1 {
   font-size: var(--fs-hero);
@@ -553,17 +583,18 @@ button { cursor: pointer; }
 
 @media (min-width: 768px) {
   .hero { padding-top: 0; }
-  /* Scena = pierwszy ekran bez pasa zalet, nie mniej niż 560 px; obraz pod nawigacją i tekstem */
+  /* Scena = pierwszy ekran bez pasa zalet, nie mniej niż 560 px; nagranie pod nawigacją i tekstem */
   .hero__scena { height: max(560px, calc(100svh - var(--fakty-h))); }
   .hero__media { position: absolute; inset: 0; height: auto; }
-  .hero__obraz, .hero__obraz img { object-position: var(--kadr); }
-  /* Jasny pas u góry obrazu: --tynk 70% przy krawędzi (i na całej wysokości nawigacji) → przezroczysty
-     na 28% wysokości sceny. Potrzebny mimo nieba w renderze 3: obraz nie jest przycinany w pionie, więc ciemna
-     attyka dachu bliższego budynku sięga pod linki nawigacji (bez pasa najniższy piksel 1,0:1, z pasem ≥ 6,17:1).
-     Nad obrazem, pod nawigacją i tekstem; poza nim (i poza poświatą pod tekstem) obraz ma oryginalne kolory. */
+  .hero__plakat, .hero__plakat img, .hero__wideo { object-position: var(--kadr); }
+  /* Jasny pas u góry nagrania: --tynk 70% przy krawędzi (i na całej wysokości nawigacji) → przezroczysty
+     na 28% wysokości sceny. Pod linkami nawigacji w klipach są balustrady, okładzina i korony drzew
+     (pomiar w CLAUDE.md, sekcja 6a). Nad wideo (z-index 2), pod nawigacją i tekstem; poza nim (i poza poświatą
+     pod tekstem) nagranie ma oryginalne kolory. */
   .hero__media::after {
     content: "";
     position: absolute;
+    z-index: 2;
     inset: 0 0 auto 0;
     height: 28%;
     background: linear-gradient(to bottom, rgba(245, 242, 235, .7) var(--nav-h), rgba(245, 242, 235, 0));
@@ -574,9 +605,9 @@ button { cursor: pointer; }
     padding-top: calc(var(--nav-h) + clamp(32px, 5vh, 56px));
     padding-bottom: 0;
   }
-  /* Poświata pod blokiem tekstu: --tynk 70% z miękkimi krawędziami (rozmycie 24 px), tylko pod h1, zdaniem
-     i przyciskami. Blok tekstu przy 1280–2560 px leży częściowo na bliższym budynku (attyka, balustrady)
-     i koronach drzew; bez poświaty h1 i zdanie mają najniższy piksel ok. 1:1 przy każdym object-position.
+  /* Poświata pod blokiem tekstu: --tynk 85% z miękkimi krawędziami (rozmycie 32 px), tylko pod h1, zdaniem
+     i przyciskami. Blok tekstu leży w klipach na balustradach, okładzinie, liściach i łące; bez poświaty
+     h1 i zdanie mają najniższy piksel ok. 1:1 (pomiar w CLAUDE.md, sekcja 6a).
      70% --tynk daje ≥ 4,5:1 dla --balustrady nawet na czarnym tle. */
   .hero__blok { position: relative; isolation: isolate; width: fit-content; max-width: 100%; }
   .hero__blok::before {
@@ -589,7 +620,7 @@ button { cursor: pointer; }
     pointer-events: none;
   }
   .hero__lead { font-size: 21px; }
-  /* „Zapytaj o lokal” na obrazie: pełne tło --tynk (wariant .btn--jasny), nie przezroczysty drugorzędny */
+  /* „Zapytaj o lokal” na nagraniu: pełne tło --tynk (wariant .btn--jasny), nie przezroczysty drugorzędny */
   .hero__akcje { flex-direction: row; flex-wrap: wrap; }
   .hero__akcje .btn { width: auto; }
   .hero__akcje .btn--drugi { background: var(--tynk); border-color: var(--tynk); color: var(--balustrada); }
@@ -597,7 +628,6 @@ button { cursor: pointer; }
 }
 @media (min-width: 860px) { .hero { --fakty-h: 208px; } }
 @media (min-width: 1280px) { .hero { --fakty-h: 125px; } }
-@media (min-width: 1280px) and (min-aspect-ratio: 8/5) { .hero { --kadr: 0% 0%; } }
 
 /* --------------------------------------------------------------------------
    2. Inwestycja: pierwszy rząd (zdanie i opis na całą szerokość),

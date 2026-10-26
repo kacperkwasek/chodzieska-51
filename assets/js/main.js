@@ -543,6 +543,176 @@
     zAdresu();
   }
 
+  /* Hero: wideo w tle — 4 klipy po kolei (1 → 2 → 3 → 4 → 1 …) na dwóch odtwarzaczach, które zmieniają się
+     przenikaniem. Pierwszy klip wczytywany dopiero po załadowaniu strony (load + requestIdleCallback), każdy
+     następny dopiero wtedy, gdy poprzedni już gra; naraz wczytane są najwyżej dwa klipy. Do zdarzenia canplay,
+     przy błędzie i przy zablokowanym autoodtwarzaniu widać plakat (pierwsza klatka klipu 1).
+     Wcale bez wideo przy prefers-reduced-motion, oszczędzaniu danych i wolnym łączu na telefonie. */
+  var WIDEO_KLIPY = 4;                     // hero-1 … hero-4 w assets/video/ (tools/wideo.sh)
+  var WIDEO_WYSOKOSCI = [720, 1080, 1440]; // wersje każdego klipu
+  var PRZENIKANIE = 0.7;                   // s; = transition .hero__wideo w style.css
+  var ZAPAS = 0.3;                         // s; timeupdate przychodzi co ok. 0,25 s
+  var WIDEO_KLUCZ = 'ch51-wideo';          // localStorage: 'zatrzymane' = użytkownik zatrzymał wideo
+
+  function bezWideo() {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return true;
+    var lacze = navigator.connection;
+    if (lacze && lacze.saveData) return true;
+    if (lacze && window.innerWidth < 768 && /(^|-)[23]g$/.test(lacze.effectiveType || '')) return true; // slow-2g, 2g, 3g
+    return false;
+  }
+
+  // Wersja: wysokość nagrania na ekranie (object-fit: cover, 16:9) × devicePixelRatio (najwyżej 2), z 10% tolerancji
+  // na powiększenie (np. 1280×800 → 720p, 1440×900 → 1080p, 2560×1440 albo 1440×900 przy DPR 2 → 1440p).
+  // Telefon (< 768 px): zawsze 720p — scena ma ok. 490 px wysokości, a liczy się waga pobrania.
+  function wysokoscWideo() {
+    if (window.innerWidth < 768) return WIDEO_WYSOKOSCI[0];
+    var scena = $('.hero__media');
+    var px = Math.max(scena.clientHeight, scena.clientWidth * 9 / 16) * Math.min(window.devicePixelRatio || 1, 2);
+    for (var i = 0; i < WIDEO_WYSOKOSCI.length; i++) {
+      if (px <= WIDEO_WYSOKOSCI[i] * 1.1) return WIDEO_WYSOKOSCI[i];
+    }
+    return WIDEO_WYSOKOSCI[WIDEO_WYSOKOSCI.length - 1];
+  }
+
+  function poZaladowaniu(fn) {
+    function bezczynnie() {
+      if ('requestIdleCallback' in window) requestIdleCallback(fn, { timeout: 2000 });
+      else setTimeout(fn, 200);
+    }
+    if (document.readyState === 'complete') bezczynnie();
+    else window.addEventListener('load', bezczynnie, { once: true });
+  }
+
+  function pamiec(wartosc) {
+    try {
+      if (wartosc === undefined) return localStorage.getItem(WIDEO_KLUCZ);
+      if (wartosc === null) localStorage.removeItem(WIDEO_KLUCZ); else localStorage.setItem(WIDEO_KLUCZ, wartosc);
+    } catch (e) { return null; } // tryb prywatny / zablokowane dane witryny: bez zapamiętywania
+  }
+
+  function wideoHero() {
+    var filmy = $$('.hero__wideo');
+    var przycisk = $('.hero__pauza');
+    if (filmy.length < 2 || !przycisk || bezWideo()) return; // bez wideo nie ma też przycisku pauzy
+    var zatrzymane = pamiec() === 'zatrzymane'; // wybór użytkownika (także z poprzedniej wizyty)
+    var zablokowane = false;  // autoodtwarzanie zablokowane albo błąd pliku: zostaje plakat
+    var wczytane = false;
+    var naEkranie = true;
+    var przejscie = false;
+    var czekaNaNastepny = false;
+    var wersja = '';          // np. '1080.webm', ustalana przy pierwszym wczytaniu
+    var biezacy = filmy[0];   // odtwarzacz na wierzchu
+
+    function inny(v) { return v === filmy[0] ? filmy[1] : filmy[0]; }
+    function powinnoGrac() { return wczytane && !zablokowane && !zatrzymane && naEkranie; }
+
+    function ustawKlip(v, n) { // samo ustawienie src przy preload="auto" zaczyna wczytywanie
+      v.dataset.klip = n;
+      v.preload = 'auto';
+      v.src = 'assets/video/hero-' + n + '-' + wersja;
+    }
+    function przygotujNastepny() {
+      ustawKlip(inny(biezacy), Number(biezacy.dataset.klip) % WIDEO_KLIPY + 1);
+    }
+    function graj(v) {
+      var gra = v.play();
+      if (gra && gra.catch) gra.catch(function (e) {
+        if (e && e.name === 'NotAllowedError') zablokuj(); // AbortError (pauza, zmiana src) nie jest blokadą
+      });
+    }
+    function zablokuj() {
+      zablokowane = true;
+      filmy.forEach(function (v) { v.pause(); v.classList.remove('is-gotowe', 'is-wierzch'); });
+      przycisk.hidden = true;
+    }
+    function zatrzymaj() { filmy.forEach(function (v) { v.pause(); }); }
+    function wznow() {
+      graj(biezacy);
+      if (przejscie && !inny(biezacy).ended) graj(inny(biezacy));
+    }
+
+    // Następny klip na wierzch i w 0,7 s nad bieżącym (który gra dalej pod spodem), potem bieżący stoi
+    // i dostaje kolejny klip. Jeśli następny jeszcze się nie wczytał, bieżący stoi na ostatniej klatce.
+    function przenikaj() {
+      if (przejscie || zablokowane) return;
+      var stary = biezacy;
+      var nowy = inny(stary);
+      if (nowy.readyState < 3) { // HAVE_FUTURE_DATA
+        if (!czekaNaNastepny) {
+          czekaNaNastepny = true;
+          nowy.addEventListener('canplay', function () { czekaNaNastepny = false; przenikaj(); }, { once: true });
+        }
+        return;
+      }
+      przejscie = true;
+      biezacy = nowy;
+      if (powinnoGrac()) graj(nowy);
+      nowy.classList.add('is-wierzch', 'is-gotowe');
+      stary.classList.remove('is-wierzch');
+      setTimeout(function () {
+        stary.pause();
+        stary.classList.remove('is-gotowe');
+        przejscie = false;
+        przygotujNastepny();
+      }, PRZENIKANIE * 1000 + 100);
+    }
+
+    filmy.forEach(function (v) {
+      v.addEventListener('timeupdate', function () {
+        if (v !== biezacy || przejscie || !v.duration) return;
+        if (v.duration - v.currentTime <= (PRZENIKANIE + ZAPAS) * v.playbackRate) przenikaj();
+      });
+      v.addEventListener('ended', function () { if (v === biezacy) przenikaj(); });
+      v.addEventListener('error', function () { if (v.getAttribute('src')) zablokuj(); });
+    });
+
+    function wczytaj() {
+      if (wczytane) return;
+      wczytane = true;
+      var v = filmy[0];
+      wersja = wysokoscWideo() + (v.canPlayType('video/webm; codecs="vp9"') ? '.webm' : '.mp4');
+      filmy.forEach(function (f) { f.muted = true; }); // autoodtwarzanie w przeglądarkach wymaga wyciszenia
+      v.addEventListener('canplay', function () {
+        if (zablokowane) return;
+        v.classList.add('is-wierzch', 'is-gotowe');
+        przycisk.hidden = false;
+      }, { once: true });
+      v.addEventListener('playing', przygotujNastepny, { once: true }); // klip 2 dopiero, gdy klip 1 gra
+      ustawKlip(v, 1);
+      if (powinnoGrac()) graj(v);
+    }
+
+    function ustawPrzycisk() {
+      przycisk.classList.toggle('is-zatrzymane', zatrzymane);
+      przycisk.setAttribute('aria-label', zatrzymane ? 'Odtwórz wideo' : 'Zatrzymaj wideo');
+    }
+    przycisk.addEventListener('click', function () {
+      zatrzymane = !zatrzymane;
+      pamiec(zatrzymane ? 'zatrzymane' : null);
+      ustawPrzycisk();
+      if (zatrzymane) zatrzymaj();
+      else if (!wczytane) wczytaj();
+      else wznow();
+    });
+    ustawPrzycisk();
+
+    if (zatrzymane) {
+      przycisk.hidden = false; // zatrzymane w poprzedniej wizycie: plakat i „Odtwórz wideo”, wideo się nie wczytuje
+    } else {
+      poZaladowaniu(wczytaj);
+    }
+
+    // poza ekranem wideo stoi (mniej pracy procesora), po powrocie gra dalej, chyba że użytkownik je zatrzymał
+    if ('IntersectionObserver' in window) {
+      new IntersectionObserver(function (wpisy) {
+        naEkranie = wpisy[0].isIntersecting;
+        if (!wczytane || zablokowane || zatrzymane) return;
+        if (naEkranie) wznow(); else zatrzymaj();
+      }).observe($('.hero__media'));
+    }
+  }
+
   /* Telefon: dolny pasek „Zadzwoń” / „Zapytaj o lokal”. Widoczny po przewinięciu poza hero,
      schowany, gdy widać Kontakt albo stopkę albo otwarte jest menu. */
   function pasekDolny() {
@@ -1072,6 +1242,7 @@
     podglad();
     karta();
     pasekDolny();
+    wideoHero();
     przewijanieDoSekcji();
     mapaLeniwie();
   }
