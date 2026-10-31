@@ -340,6 +340,8 @@
       p.setAttribute('points', l.obszar.map(function (pt) { return pt.join(','); }).join(' '));
       p.setAttribute('class', 'wybor__obszar');
       p.setAttribute('data-lokal', l.id);
+      // kolor obszaru wg statusu (style.css): dostepny / rezerwacja / sprzedany
+      p.setAttribute('data-status', l.status === 'dostępny' ? 'dostepny' : l.status);
       p.setAttribute('tabindex', '0');
       p.setAttribute('role', 'button');
       p.setAttribute('aria-pressed', 'false');
@@ -730,6 +732,32 @@
       }).observe($(para[1]));
     });
     new MutationObserver(odswiez).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+  }
+
+  /* Skróty w lewym dolnym rogu: widoczne po przewinięciu poza hero i przy zamkniętym menu;
+     „Zapytaj o lokal” (koperta) schowany, gdy widać Kontakt albo stopkę. Kliknięcie koperty obsługuje [data-zapytaj]. */
+  function skroty() {
+    var formularz = $('.skroty__btn--formularz'), gora = $('#na-gore');
+    if (!gora) return;
+    gora.addEventListener('click', function () {
+      przewinDo($('#gora'), $('.przeskocz')); // fokus na początek strony: następny Tab trafia do nawigacji
+      if (location.hash) history.replaceState(null, '', location.pathname + location.search);
+    });
+    if (!('IntersectionObserver' in window)) return;
+    var stan = { hero: true, kontakt: false, stopka: false };
+    function odswiez() {
+      var menu = document.body.classList.contains('menu-otwarte');
+      gora.classList.toggle('is-ukryty', stan.hero || menu);
+      formularz.classList.toggle('is-ukryty', stan.hero || menu || stan.kontakt || stan.stopka);
+    }
+    [['hero', '#gora'], ['kontakt', '#kontakt'], ['stopka', 'footer']].forEach(function (para) {
+      new IntersectionObserver(function (wpisy) {
+        stan[para[0]] = wpisy[0].isIntersecting;
+        odswiez();
+      }).observe($(para[1]));
+    });
+    new MutationObserver(odswiez).observe(document.body, { attributes: true, attributeFilter: ['class'] });
+    odswiez();
   }
 
   function oknoHistorii(l, wyzwalacz) {
@@ -1242,6 +1270,7 @@
     podglad();
     karta();
     pasekDolny();
+    skroty();
     wideoHero();
     przewijanieDoSekcji();
     mapaLeniwie();

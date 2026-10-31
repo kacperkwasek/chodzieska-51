@@ -105,7 +105,7 @@ window.CH51_DATA = {
       cenaM2: 13500, // POGLĄDOWE
       cenaCalkowita: 1350000, // POGLĄDOWE
       postojKomorka: '2 naziemne, w cenie', // POGLĄDOWE
-      status: 'dostępny', // POGLĄDOWE
+      status: 'rezerwacja', // POGLĄDOWE — przykład (2026-10-31): pokazuje kolor statusu na renderze
       historiaCen: [ // POGLĄDOWE
         { data: '2026-04-01', cenaM2: 12900, cenaCalkowita: 1290000 },
         { data: '2026-09-01', cenaM2: 13500, cenaCalkowita: 1350000 },
@@ -211,7 +211,7 @@ window.CH51_DATA = {
       cenaM2: 13500, // POGLĄDOWE
       cenaCalkowita: 1350000, // POGLĄDOWE
       postojKomorka: '2 naziemne, w cenie', // POGLĄDOWE
-      status: 'dostępny', // POGLĄDOWE
+      status: 'sprzedany', // POGLĄDOWE — przykład (2026-10-31): pokazuje kolor statusu na renderze
       historiaCen: [ // POGLĄDOWE: D bez osobnej historii w uwagach, przyjęta ta sama co A–C
         { data: '2026-04-01', cenaM2: 12900, cenaCalkowita: 1290000 },
         { data: '2026-09-01', cenaM2: 13500, cenaCalkowita: 1350000 },

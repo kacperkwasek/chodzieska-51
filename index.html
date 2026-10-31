@@ -117,7 +117,7 @@
         <div class="wrap hero__tekst">
           <div class="hero__blok">
             <h1 id="hero-tytul">Chodzieska 51</h1>
-            <p class="hero__lead">Cztery trzypoziomowe lokale po 100&nbsp;m² w zielonej części Wawra.</p>
+            <p class="hero__lead">Cztery trzypoziomowe lokale po 100&nbsp;m² w&nbsp;zielonej części Wawra.</p>
             <div class="hero__akcje">
               <a class="btn" href="#lokale">Zobacz lokale i ceny</a>
               <a class="btn btn--drugi" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
@@ -346,7 +346,13 @@
               <!-- Nakładka SVG z obszarami lokali: budowana w main.js z danych w data.js -->
               <svg class="wybor__nakladka" id="wybor-nakladka" role="group" aria-label="Lokale na wizualizacji"></svg>
             </div>
-            <figcaption class="drobny">Najedź na budynek albo wybierz literę, żeby zobaczyć dane lokalu. Podział budynków na lokale jest poglądowy.</figcaption>
+            <figcaption class="drobny">
+              <ul class="wybor__legenda" aria-label="Kolory statusu lokali">
+                <li data-status="dostepny">Dostępny</li>
+                <li data-status="rezerwacja">Zarezerwowany</li>
+                <li data-status="sprzedany">Sprzedany</li>
+              </ul>
+              Najedź na budynek albo wybierz literę, żeby zobaczyć dane lokalu. Podział budynków na lokale jest poglądowy.</figcaption>
           </figure>
 
           <div class="lokale__boczny">
@@ -363,7 +369,7 @@
         </div>
 
         <div class="dostepnosc">
-          <p class="dostepnosc__liczba" id="dostepnosc">Dostępne 4 z 4</p>
+          <p class="dostepnosc__liczba" id="dostepnosc">Dostępne 2 z 4</p>
         </div>
 
         <div class="tabela-przewijana" tabindex="0" role="region" aria-labelledby="cennik-podpis">
@@ -646,5 +652,11 @@
     <a class="btn btn--drugi" href="tel:+48690888849" data-telefon="krotki">Zadzwoń</a>
     <a class="btn" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
   </nav>
+
+  <!-- Skróty w lewym dolnym rogu (po hero): do formularza i na górę strony; na telefonie nad dolnym paskiem -->
+  <div class="skroty" id="skroty">
+    <a class="skroty__btn skroty__btn--formularz is-ukryty" href="#kontakt" data-zapytaj="" aria-label="Zapytaj o lokal" title="Zapytaj o lokal"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#formularz"></use></svg></a>
+    <button class="skroty__btn skroty__btn--gora is-ukryty" type="button" id="na-gore" aria-label="Na górę strony" title="Na górę strony"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#na-gore"></use></svg></button>
+  </div>
 </body>
 </html>

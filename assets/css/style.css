@@ -16,6 +16,10 @@
   --stopka-link: #C09684;     /* linki w stopce (5,41:1 na balustradzie) */
   --prazek: #44332A;          /* pionowe prążki w ciemnych sekcjach (img/prazki.svg) */
   --logo-tlo: var(--cta);     /* tło znaku logo = przycisk główny (--balustrada); „51” w --tynk 12,8:1 */
+  /* statusy lokali: lekki odcień na obszarach renderu 1 (Lokale i ceny) i w legendzie pod nim — tylko tam */
+  --status-dostepny: #5E9B4E;   /* zielony */
+  --status-rezerwacja: #E2C33A; /* żółty */
+  --status-sprzedany: #C0392B;  /* czerwony */
   --logo-ramka: #C8A96E;      /* złota ramka i „CHO” w znaku logo (6,38:1 na tle znaku) — złoto TYLKO w logo */
 
   /* Przyciski główne (CTA): ciemne, żeby nie zlewały się z brązową okładziną na renderach */
@@ -182,7 +186,7 @@ button { cursor: pointer; }
   background: var(--balustrada); color: var(--tynk);
   padding: 12px 16px; text-decoration: none;
 }
-.przeskocz:focus { top: 8px; color: var(--tynk); }
+.przeskocz:focus-visible { top: 8px; color: var(--tynk); }
 
 /* Placeholder brakujących danych */
 .placeholder {
@@ -834,18 +838,23 @@ button { cursor: pointer; }
   width: 100%;
   height: 100%;
 }
+/* Obszar lokalu stale w lekkim odcieniu statusu (zielony / żółty / czerwony), po najechaniu i wybraniu mocniej */
 .wybor__obszar {
-  fill: var(--okladzina);
-  fill-opacity: 0;
-  stroke: var(--tynk);
-  stroke-width: 0;
+  --status: var(--status-dostepny);
+  fill: var(--status);
+  fill-opacity: .3;
+  stroke: var(--status);
+  stroke-opacity: .9;
+  stroke-width: 2;
   cursor: pointer;
   transition: fill-opacity .2s var(--ease);
   outline: none;
 }
+.wybor__obszar[data-status="rezerwacja"] { --status: var(--status-rezerwacja); }
+.wybor__obszar[data-status="sprzedany"] { --status: var(--status-sprzedany); }
 .wybor__obszar:hover,
 .wybor__obszar:focus,
-.wybor__obszar.is-aktywny { fill-opacity: .55; stroke-width: 3; }
+.wybor__obszar.is-aktywny { fill-opacity: .55; stroke: var(--tynk); stroke-opacity: 1; stroke-width: 3; }
 .wybor__obszar:focus { stroke: var(--balustrada); stroke-width: 8; stroke-linejoin: miter; }
 .wybor__etykieta rect { fill: var(--tynk); }
 .wybor__etykieta text {
@@ -857,6 +866,17 @@ button { cursor: pointer; }
 }
 .wybor__etykieta { pointer-events: none; }
 .wybor figcaption { margin-top: 12px; }
+/* Legenda kolorów statusu (kolor nie jest jedyną informacją: status jest też w etykiecie obszaru, panelu i tabeli) */
+.wybor__legenda { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 0 0 8px; padding: 0; list-style: none; }
+.wybor__legenda li { display: flex; align-items: center; gap: 8px; }
+.wybor__legenda li::before {
+  content: ""; width: 14px; height: 14px; flex: none;
+  background: color-mix(in srgb, var(--status) 45%, var(--tynk));
+  border: 1.5px solid var(--status);
+}
+.wybor__legenda [data-status="dostepny"] { --status: var(--status-dostepny); }
+.wybor__legenda [data-status="rezerwacja"] { --status: var(--status-rezerwacja); }
+.wybor__legenda [data-status="sprzedany"] { --status: var(--status-sprzedany); }
 
 .lokale__boczny { display: grid; gap: 24px; }
 .lokale__przyciski { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
@@ -1322,6 +1342,42 @@ body.zablokowane { overflow: hidden; } /* przewijanie strony pod oknem zablokowa
   }
   .pasek-dolny.is-widoczny { transform: none; visibility: visible; transition: transform .25s var(--ease), visibility 0s; }
   .pasek-dolny .btn { min-height: 48px; padding-inline: 12px; }
+}
+
+/* Skróty w lewym dolnym rogu: „Zapytaj o lokal” (ikona koperty) i „Na górę strony”.
+   Widoczne po przewinięciu poza hero; koperta schowana, gdy widać Kontakt albo stopkę (main.js: skroty()). */
+.skroty {
+  position: fixed;
+  left: calc(12px + env(safe-area-inset-left));
+  bottom: calc(16px + env(safe-area-inset-bottom));
+  z-index: 39;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: bottom .25s var(--ease);
+}
+.skroty__btn {
+  display: grid; place-items: center;
+  width: 44px; height: 44px; padding: 0;
+  border: 1.5px solid var(--balustrada);
+  background: var(--tynk);
+  color: var(--balustrada);
+  cursor: pointer;
+  opacity: 1; visibility: visible;
+  transition: opacity .2s var(--ease), visibility 0s, background-color .15s var(--ease), color .15s var(--ease);
+}
+.skroty__btn:hover { background: var(--balustrada); color: var(--tynk); }
+/* przycisk główny: tło --cta, jasna obwódka oddziela go od ciemnego pasa CTA */
+.skroty__btn--formularz { background: var(--cta); border-color: var(--tynk); color: var(--tynk); }
+.skroty__btn--formularz:hover { background: var(--cta-hover); color: var(--tynk); }
+.skroty__btn:focus-visible { outline: 2px solid var(--balustrada); outline-offset: 3px; }
+.skroty__btn .ikona { width: 22px; height: 22px; }
+.skroty__btn.is-ukryty {
+  opacity: 0; visibility: hidden; pointer-events: none;
+  transition: opacity .2s var(--ease), visibility 0s linear .2s;
+}
+@media (max-width: 699px) {
+  /* telefon: zapytanie jest w dolnym pasku; strzałka w górę stoi nad paskiem, gdy jest widoczny */
+  .skroty__btn--formularz { display: none; }
+  .pasek-dolny.is-widoczny ~ .skroty { bottom: calc(73px + 12px + env(safe-area-inset-bottom)); }
 }
 
 /* --------------------------------------------------------------------------
