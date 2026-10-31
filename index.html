@@ -82,7 +82,7 @@
 
   <main id="tresc">
 
-    <!-- 1. Hero: plakat (pierwsza klatka klipu 1), nad nim wideo — 4 klipy po kolei z przenikaniem; na nim napisy;
+    <!-- 1. Hero: plakat (pierwsza klatka klipu 1), nad nim wideo — 2 klipy na zmianę z przenikaniem; na nim napisy;
          pod spodem pas zalet. Telefon: nagranie bez tekstu, tekst i zalety pod nim.
          sizes = szerokość plakatu przy object-fit: cover (16:9 = 1,78:1). Telefon: scena 60svh, więc max(100vw, 107vh).
          Od 768 px scena ma max(560 px, 100svh − pas zalet), więc max(100vw, 996 px, 1,78 × (100vh − pas zalet));
@@ -103,9 +103,9 @@
               srcset="assets/img/hero-plakat-640.jpg 640w, assets/img/hero-plakat-1280.jpg 1280w, assets/img/hero-plakat-1920.jpg 1920w, assets/img/hero-plakat-2560.jpg 2560w"
               sizes="(max-width: 767px) max(100vw, 107vh), (max-width: 767px) 107vh, (max-width: 859px) max(100vw, 996px, calc(178vh - 441px)), (max-width: 1279px) max(100vw, 996px, calc(178vh - 370px)), max(100vw, 996px, calc(178vh - 222px)), 100vw"
               width="2560" height="1440" loading="eager" fetchpriority="high" decoding="async"
-              alt="Wejścia do lokali C i D: brązowa okładzina, balkony z lamelami, przed nimi schody, nasadzenia i ogrodzenie">
+              alt="Trzypiętrowy budynek z białą elewacją, brązową okładziną i balkonami, przed nim parking z kostki, latarnie i trawnik; w głębi drugi budynek i drzewa">
           </picture>
-          <!-- Wideo dekoracyjne: dwa odtwarzacze na zmianę (klip 1 → 2 → 3 → 4 → 1 …, przenikanie 0,7 s).
+          <!-- Wideo dekoracyjne: dwa odtwarzacze na zmianę (klip 1 → 2 → 1 …, przenikanie 0,7 s).
                Źródła (720p / 1080p / 1440p, WebM albo MP4) wybiera i wczytuje main.js po załadowaniu strony. -->
           <video class="hero__wideo" muted playsinline disablepictureinpicture disableremoteplayback preload="none" aria-hidden="true" tabindex="-1"></video>
           <video class="hero__wideo" muted playsinline disablepictureinpicture disableremoteplayback preload="none" aria-hidden="true" tabindex="-1"></video>
@@ -653,7 +653,7 @@
     <a class="btn" href="#kontakt" data-zapytaj="">Zapytaj o lokal</a>
   </nav>
 
-  <!-- Skróty w lewym dolnym rogu (po hero): do formularza i na górę strony; na telefonie nad dolnym paskiem -->
+  <!-- Skróty w prawym dolnym rogu (po hero): do formularza i na górę strony; na telefonie nad dolnym paskiem -->
   <div class="skroty" id="skroty">
     <a class="skroty__btn skroty__btn--formularz is-ukryty" href="#kontakt" data-zapytaj="" aria-label="Zapytaj o lokal" title="Zapytaj o lokal"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#formularz"></use></svg></a>
     <button class="skroty__btn skroty__btn--gora is-ukryty" type="button" id="na-gore" aria-label="Na górę strony" title="Na górę strony"><svg class="ikona" aria-hidden="true" focusable="false"><use href="assets/icons/ikony.svg#na-gore"></use></svg></button>

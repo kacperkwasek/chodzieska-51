@@ -545,12 +545,12 @@
     zAdresu();
   }
 
-  /* Hero: wideo w tle — 4 klipy po kolei (1 → 2 → 3 → 4 → 1 …) na dwóch odtwarzaczach, które zmieniają się
+  /* Hero: wideo w tle — 2 klipy na zmianę (1 → 2 → 1 …) na dwóch odtwarzaczach, które zmieniają się
      przenikaniem. Pierwszy klip wczytywany dopiero po załadowaniu strony (load + requestIdleCallback), każdy
      następny dopiero wtedy, gdy poprzedni już gra; naraz wczytane są najwyżej dwa klipy. Do zdarzenia canplay,
      przy błędzie i przy zablokowanym autoodtwarzaniu widać plakat (pierwsza klatka klipu 1).
      Wcale bez wideo przy prefers-reduced-motion, oszczędzaniu danych i wolnym łączu na telefonie. */
-  var WIDEO_KLIPY = 4;                     // hero-1 … hero-4 w assets/video/ (tools/wideo.sh)
+  var WIDEO_KLIPY = 2;                     // hero-1 (parking), hero-2 (dron) w assets/video/ (tools/wideo.sh)
   var WIDEO_WYSOKOSCI = [720, 1080, 1440]; // wersje każdego klipu
   var PRZENIKANIE = 0.7;                   // s; = transition .hero__wideo w style.css
   var ZAPAS = 0.3;                         // s; timeupdate przychodzi co ok. 0,25 s
@@ -734,7 +734,7 @@
     new MutationObserver(odswiez).observe(document.body, { attributes: true, attributeFilter: ['class'] });
   }
 
-  /* Skróty w lewym dolnym rogu: widoczne po przewinięciu poza hero i przy zamkniętym menu;
+  /* Skróty w prawym dolnym rogu: widoczne po przewinięciu poza hero i przy zamkniętym menu;
      „Zapytaj o lokal” (koperta) schowany, gdy widać Kontakt albo stopkę. Kliknięcie koperty obsługuje [data-zapytaj]. */
   function skroty() {
     var formularz = $('.skroty__btn--formularz'), gora = $('#na-gore');

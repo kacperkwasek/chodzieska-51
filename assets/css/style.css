@@ -463,7 +463,7 @@ button { cursor: pointer; }
 }
 
 /* --------------------------------------------------------------------------
-   1. Hero: wideo (4 klipy po kolei; do czasu załadowania plakat) na całą szerokość, napisy wprost na nagraniu,
+   1. Hero: wideo (2 klipy na zmianę; do czasu załadowania plakat) na całą szerokość, napisy wprost na nagraniu,
       pod nim pas zalet (ikona nad podpisem). Telefon (< 768 px): nagranie bez tekstu, tekst i zalety pod nim.
    -------------------------------------------------------------------------- */
 .hero {
@@ -1344,11 +1344,11 @@ body.zablokowane { overflow: hidden; } /* przewijanie strony pod oknem zablokowa
   .pasek-dolny .btn { min-height: 48px; padding-inline: 12px; }
 }
 
-/* Skróty w lewym dolnym rogu: „Zapytaj o lokal” (ikona koperty) i „Na górę strony”.
+/* Skróty w prawym dolnym rogu: „Zapytaj o lokal” (ikona koperty) i „Na górę strony”.
    Widoczne po przewinięciu poza hero; koperta schowana, gdy widać Kontakt albo stopkę (main.js: skroty()). */
 .skroty {
   position: fixed;
-  left: calc(12px + env(safe-area-inset-left));
+  right: calc(12px + env(safe-area-inset-right));
   bottom: calc(16px + env(safe-area-inset-bottom));
   z-index: 39;
   display: flex; flex-direction: column; gap: 8px;
