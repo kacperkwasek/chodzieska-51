@@ -550,7 +550,9 @@
      następny dopiero wtedy, gdy poprzedni już gra; naraz wczytane są najwyżej dwa klipy. Do zdarzenia canplay,
      przy błędzie i przy zablokowanym autoodtwarzaniu widać plakat (pierwsza klatka klipu 1).
      Wcale bez wideo przy prefers-reduced-motion, oszczędzaniu danych i wolnym łączu na telefonie. */
-  var WIDEO_KLIPY = 2;                     // hero-1 (parking), hero-2 (dron) w assets/video/ (tools/wideo.sh)
+  // hero-<nazwa>-<wysokość>.<webm|mp4> w assets/video/ (tools/wideo.sh), po kolei. Nowe nagranie = nowa nazwa
+  // (pliki mają cache 30 dni; ta sama nazwa pokazywałaby u części widzów stare nagranie).
+  var WIDEO_KLIPY = ['parking', 'dron'];
   var WIDEO_WYSOKOSCI = [720, 1080, 1440]; // wersje każdego klipu
   var PRZENIKANIE = 0.7;                   // s; = transition .hero__wideo w style.css
   var ZAPAS = 0.3;                         // s; timeupdate przychodzi co ok. 0,25 s
@@ -609,13 +611,13 @@
     function inny(v) { return v === filmy[0] ? filmy[1] : filmy[0]; }
     function powinnoGrac() { return wczytane && !zablokowane && !zatrzymane && naEkranie; }
 
-    function ustawKlip(v, n) { // samo ustawienie src przy preload="auto" zaczyna wczytywanie
-      v.dataset.klip = n;
+    function ustawKlip(v, i) { // i = indeks w WIDEO_KLIPY; samo ustawienie src przy preload="auto" zaczyna wczytywanie
+      v.dataset.klip = i;
       v.preload = 'auto';
-      v.src = 'assets/video/hero-' + n + '-' + wersja;
+      v.src = 'assets/video/hero-' + WIDEO_KLIPY[i] + '-' + wersja;
     }
     function przygotujNastepny() {
-      ustawKlip(inny(biezacy), Number(biezacy.dataset.klip) % WIDEO_KLIPY + 1);
+      ustawKlip(inny(biezacy), (Number(biezacy.dataset.klip) + 1) % WIDEO_KLIPY.length);
     }
     function graj(v) {
       var gra = v.play();
@@ -681,7 +683,7 @@
         przycisk.hidden = false;
       }, { once: true });
       v.addEventListener('playing', przygotujNastepny, { once: true }); // klip 2 dopiero, gdy klip 1 gra
-      ustawKlip(v, 1);
+      ustawKlip(v, 0);
       if (powinnoGrac()) graj(v);
     }
 
